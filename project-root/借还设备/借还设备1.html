@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,12 @@
             box-sizing: border-box;
             font-family: 'Microsoft YaHei', sans-serif;
         }
-        
+
         body {
             background-color: #f5f5f5;
             color: #333;
         }
-        
+
         header {
             background-color: #2c3e50;
             color: white;
@@ -24,25 +25,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
+
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
         }
-        
+
         .logo a {
             color: white;
             text-decoration: none;
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        
+
         .user-info a {
             color: white;
             text-decoration: none;
@@ -50,17 +51,17 @@
             border-radius: 4px;
             transition: background-color 0.3s;
         }
-        
+
         .user-info a:hover {
             background-color: #34495e;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
-        
+
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -69,84 +70,84 @@
             padding-bottom: 1rem;
             border-bottom: 1px solid #eee;
         }
-        
+
         .page-header h1 {
             color: #2c3e50;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .page-header h1 i {
             color: #3498db;
         }
-        
+
         .breadcrumb {
             color: #7f8c8d;
             font-size: 0.9rem;
         }
-        
+
         .breadcrumb a {
             color: #3498db;
             text-decoration: none;
         }
-        
+
         .tabs {
             display: flex;
             border-bottom: 1px solid #ddd;
             margin-bottom: 1.5rem;
         }
-        
+
         .tab {
             padding: 0.75rem 1.5rem;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
         }
-        
+
         .tab.active {
             border-bottom-color: #3498db;
             color: #3498db;
             font-weight: 500;
         }
-        
+
         .tab:hover:not(.active) {
             background-color: #f8f9fa;
         }
-        
+
         .tab-content {
             display: none;
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
+
         .card {
             background-color: white;
             border-radius: 8px;
             padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             margin-bottom: 1.5rem;
         }
-        
+
         .card h2 {
             color: #2c3e50;
             margin-bottom: 1.5rem;
             font-size: 1.2rem;
         }
-        
+
         .form-group {
             margin-bottom: 1rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             color: #7f8c8d;
             font-size: 0.9rem;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 0.75rem;
@@ -155,25 +156,25 @@
             font-size: 1rem;
             transition: border-color 0.3s;
         }
-        
+
         .form-control:focus {
             border-color: #3498db;
             outline: none;
         }
-        
+
         .form-row {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .form-actions {
             display: flex;
             gap: 1rem;
             margin-top: 1.5rem;
         }
-        
+
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -182,64 +183,65 @@
             font-size: 1rem;
             transition: background-color 0.3s;
         }
-        
+
         .btn-primary {
             background-color: #3498db;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background-color: #2980b9;
         }
-        
+
         .btn-secondary {
             background-color: #95a5a6;
             color: white;
         }
-        
+
         .btn-secondary:hover {
             background-color: #7f8c8d;
         }
-        
+
         .btn-success {
             background-color: #28a745;
             color: white;
         }
-        
+
         .btn-success:hover {
             background-color: #218838;
         }
-        
+
         .btn-danger {
             background-color: #dc3545;
             color: white;
         }
-        
+
         .btn-danger:hover {
             background-color: #c82333;
         }
-        
+
         .device-list {
             width: 100%;
             border-collapse: collapse;
         }
-        
-        .device-list th, .device-list td {
+
+        .device-list th,
+        .device-list td {
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
-        
+
         .device-list th {
             background-color: #f8f9fa;
             color: #2c3e50;
             font-weight: 500;
         }
-        
+
         .device-list tr:hover {
             background-color: #f8f9fa;
         }
-        
+
         .status {
             display: inline-block;
             padding: 0.25rem 0.5rem;
@@ -247,22 +249,22 @@
             font-size: 0.8rem;
             font-weight: 500;
         }
-        
+
         .status-available {
             background-color: #d4edda;
             color: #155724;
         }
-        
+
         .status-borrowed {
             background-color: #fff3cd;
             color: #856404;
         }
-        
+
         .status-overdue {
             background-color: #f8d7da;
             color: #721c24;
         }
-        
+
         .action-btn {
             padding: 0.5rem 0.75rem;
             border: none;
@@ -271,31 +273,31 @@
             font-size: 0.9rem;
             transition: background-color 0.3s;
         }
-        
+
         .action-btn.btn-primary {
             background-color: #3498db;
             color: white;
         }
-        
+
         .action-btn.btn-primary:hover {
             background-color: #2980b9;
         }
-        
+
         .action-btn.btn-success {
             background-color: #28a745;
             color: white;
         }
-        
+
         .action-btn.btn-success:hover {
             background-color: #218838;
         }
-        
+
         .pagination {
             display: flex;
             justify-content: center;
             padding: 1.5rem 0;
         }
-        
+
         .pagination a {
             color: #3498db;
             text-decoration: none;
@@ -303,16 +305,16 @@
             margin: 0 0.25rem;
             border-radius: 4px;
         }
-        
+
         .pagination a.active {
             background-color: #3498db;
             color: white;
         }
-        
+
         .pagination a:hover:not(.active) {
             background-color: #e9ecef;
         }
-        
+
         footer {
             text-align: center;
             padding: 1.5rem;
@@ -323,18 +325,19 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
     <header>
         <div class="logo">
             <a href="../首页.html">科研设备管理系统</a>
         </div>
         <div class="user-info">
-            <span>欢迎，张教授</span>
+            <span id="username-display">欢迎，</span>
             <a href="#">个人中心</a>
-            <a href="#">退出登录</a>
+            <a href="#" id="logout-btn">退出登录</a>
         </div>
     </header>
-    
+
     <div class="container">
         <div class="page-header">
             <h1><i class="fas fa-exchange-alt"></i> 设备借还</h1>
@@ -342,46 +345,48 @@
                 <a href="../首页.html">首页</a> > 设备借还
             </div>
         </div>
-        
+
         <div class="tabs">
             <div class="tab active" data-tab="borrow">设备借用</div>
             <div class="tab" data-tab="return">设备归还</div>
             <div class="tab" data-tab="records">借还记录</div>
         </div>
-        
+
         <!-- 设备借用标签页 -->
         <div id="borrow" class="tab-content active">
             <div class="card">
                 <h2><i class="fas fa-search"></i> 设备查询</h2>
-                <form>
+                <form id="borrow-search-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="borrow-device-name">设备名称</label>
                             <input type="text" id="borrow-device-name" class="form-control" placeholder="输入设备名称">
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="borrow-device-type">设备类型</label>
-                            <select id="borrow-device-type" class="form-control">
-                                <option value="">全部类型</option>
-                                <option value="1">分析仪器</option>
-                                <option value="2">实验设备</option>
-                                <option value="3">测量仪器</option>
-                                <option value="4">计算机设备</option>
-                            </select>
+                            <input type="text" id="borrow-device-type" class="form-control" placeholder="输入设备类型">
                         </div>
+
+                        <!-- <div class="form-group">
+                            <label for="borrow-device-status">设备状态</label>
+                            <select id="borrow-device-status" class="form-control">
+                                <option value="AVAILABLE">可用</option>
+                                <option value="">全部状态</option>
+                            </select>
+                        </div> -->
                     </div>
-                    
+
                     <div class="form-actions">
                         <button type="reset" class="btn btn-secondary">重置</button>
                         <button type="submit" class="btn btn-primary">查询</button>
                     </div>
                 </form>
             </div>
-            
+
             <div class="card">
                 <h2><i class="fas fa-list"></i> 可借用设备列表</h2>
-                <table class="device-list">
+                <table class="device-list" id="borrow-device-table">
                     <thead>
                         <tr>
                             <th>设备编号</th>
@@ -392,55 +397,22 @@
                             <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>DEV-2023-001</td>
-                            <td>高效液相色谱仪</td>
-                            <td>分析仪器</td>
-                            <td>Agilent 1260</td>
-                            <td><span class="status status-available">可用</span></td>
-                            <td>
-                                <button class="action-btn btn-primary">申请借用</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>DEV-2023-008</td>
-                            <td>电子天平</td>
-                            <td>测量仪器</td>
-                            <td>METTLER AE200</td>
-                            <td><span class="status status-available">可用</span></td>
-                            <td>
-                                <button class="action-btn btn-primary">申请借用</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>DEV-2023-015</td>
-                            <td>PCR仪</td>
-                            <td>实验设备</td>
-                            <td>Bio-Rad T100</td>
-                            <td><span class="status status-available">可用</span></td>
-                            <td>
-                                <button class="action-btn btn-primary">申请借用</button>
-                            </td>
-                        </tr>
+                    <tbody id="borrow-device-list">
+                        <!-- 设备列表将通过JavaScript动态加载 -->
                     </tbody>
                 </table>
-                
-                <div class="pagination">
-                    <a href="#">&laquo;</a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">&raquo;</a>
+
+                <div class="pagination" id="borrow-pagination">
+                    <!-- 分页将通过JavaScript动态生成 -->
                 </div>
             </div>
         </div>
-        
+
         <!-- 设备归还标签页 -->
         <div id="return" class="tab-content">
             <div class="card">
                 <h2><i class="fas fa-undo"></i> 待归还设备</h2>
-                <table class="device-list">
+                <table class="device-list" id="return-device-table">
                     <thead>
                         <tr>
                             <th>设备编号</th>
@@ -451,151 +423,470 @@
                             <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>DEV-2023-005</td>
-                            <td>紫外可见分光光度计</td>
-                            <td>2023-06-15</td>
-                            <td>2023-06-22</td>
-                            <td><span class="status status-borrowed">借用中</span></td>
-                            <td>
-                                <button class="action-btn btn-success">归还设备</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>DEV-2023-010</td>
-                            <td>恒温培养箱</td>
-                            <td>2023-06-18</td>
-                            <td>2023-06-25</td>
-                            <td><span class="status status-borrowed">借用中</span></td>
-                            <td>
-                                <button class="action-btn btn-success">归还设备</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>DEV-2023-017</td>
-                            <td>超纯水系统</td>
-                            <td>2023-06-10</td>
-                            <td>2023-06-17</td>
-                            <td><span class="status status-overdue">已逾期</span></td>
-                            <td>
-                                <button class="action-btn btn-success">归还设备</button>
-                                <button class="action-btn btn-danger">申请延期</button>
-                            </td>
-                        </tr>
+                    <tbody id="return-device-list">
+                        <!-- 待归还设备列表将通过JavaScript动态加载 -->
                     </tbody>
                 </table>
-                
-                <div class="pagination">
-                    <a href="#">&laquo;</a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">&raquo;</a>
+
+                <div class="pagination" id="return-pagination">
+                    <!-- 分页将通过JavaScript动态生成 -->
                 </div>
             </div>
         </div>
-        
+
         <!-- 借还记录标签页 -->
         <div id="records" class="tab-content">
             <div class="card">
                 <h2><i class="fas fa-history"></i> 借还记录查询</h2>
-                <form>
+                <form id="records-search-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="record-device-name">设备名称</label>
                             <input type="text" id="record-device-name" class="form-control" placeholder="输入设备名称">
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="record-type">记录类型</label>
                             <select id="record-type" class="form-control">
                                 <option value="">全部记录</option>
-                                <option value="borrow">借用记录</option>
-                                <option value="return">归还记录</option>
+                                <option value="PENDING">待审核</option>
+                                <option value="BORROWED">借用中</option>
+                                <option value="RETURNED">已归还</option>
                             </select>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="record-date">日期范围</label>
-                            <input type="date" id="record-date" class="form-control">
-                        </div>
                     </div>
-                    
+
                     <div class="form-actions">
                         <button type="reset" class="btn btn-secondary">重置</button>
                         <button type="submit" class="btn btn-primary">查询</button>
                     </div>
                 </form>
             </div>
-            
+
             <div class="card">
-                <table class="device-list">
+                <table class="device-list" id="records-table">
                     <thead>
                         <tr>
                             <th>记录编号</th>
                             <th>设备名称</th>
                             <th>类型</th>
-                            <th>日期</th>
-                            <th>借用人</th>
+                            <th>借用日期</th>
+                            <th>归还日期</th>
                             <th>状态</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>REC-2023-056</td>
-                            <td>紫外可见分光光度计</td>
-                            <td>借用</td>
-                            <td>2023-06-15</td>
-                            <td>张教授</td>
-                            <td><span class="status status-borrowed">借用中</span></td>
-                        </tr>
-                        <tr>
-                            <td>REC-2023-042</td>
-                            <td>电子天平</td>
-                            <td>归还</td>
-                            <td>2023-06-14</td>
-                            <td>李研究员</td>
-                            <td><span class="status status-available">已归还</span></td>
-                        </tr>
-                        <tr>
-                            <td>REC-2023-038</td>
-                            <td>离心机</td>
-                            <td>借用</td>
-                            <td>2023-06-10</td>
-                            <td>王博士</td>
-                            <td><span class="status status-overdue">已逾期</span></td>
-                        </tr>
+                    <tbody id="records-list">
+                        <!-- 借还记录将通过JavaScript动态加载 -->
                     </tbody>
                 </table>
-                
-                <div class="pagination">
-                    <a href="#">&laquo;</a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">&raquo;</a>
+
+                <div class="pagination" id="records-pagination">
+                    <!-- 分页将通过JavaScript动态生成 -->
                 </div>
             </div>
         </div>
     </div>
-    
+
     <footer>
         <p>© 2025 科研设备管理系统</p>
     </footer>
 
     <script>
-        // 标签页切换功能
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // 移除所有标签和内容的active类
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
-                // 为当前点击的标签和对应内容添加active类
-                tab.classList.add('active');
-                const tabId = tab.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
+        // 全局变量
+        let currentUser = {
+            id: localStorage.getItem("userid"),
+            name: localStorage.getItem("username")
+        };
+
+        // 分页相关变量
+        const itemsPerPage = 5;
+        let currentBorrowPage = 1;
+        let currentReturnPage = 1;
+        let currentRecordsPage = 1;
+        let borrowDevices = [];
+        let returnRecords = [];
+        let allRecords = [];
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function () {
+            // 显示用户名
+            if (currentUser.name) {
+                document.getElementById('username-display').textContent = `欢迎，${currentUser.name}`;
+            }
+
+            // 标签页切换功能
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有标签和内容的active类
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                    // 为当前点击的标签和对应内容添加active类
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+
+                    // 加载对应标签页的数据
+                    if (tabId === 'borrow') {
+                        loadBorrowDevices();
+                    } else if (tabId === 'return') {
+                        loadReturnDevices();
+                    } else if (tabId === 'records') {
+                        loadRecords();
+                    }
+                });
             });
+
+            // 表单提交事件
+            document.getElementById('borrow-search-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                currentBorrowPage = 1;
+                loadBorrowDevices();
+            });
+
+            document.getElementById('records-search-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                currentRecordsPage = 1;
+                loadRecords();
+            });
+
+            // 退出登录
+            document.getElementById('logout-btn').addEventListener('click', function () {
+                localStorage.removeItem("userid");
+                localStorage.removeItem("username");
+                window.location.href = "../登录.html";
+            });
+
+            // 初始加载借用设备列表
+            loadBorrowDevices();
         });
+
+        // 加载可借用设备列表
+        async function loadBorrowDevices() {
+            const name = document.getElementById('borrow-device-name').value;
+            const type = document.getElementById('borrow-device-type').value;
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/equipment/search?status=AVAILABLE`);
+                borrowDevices = await response.json();
+
+                displayBorrowDevices();
+            } catch (error) {
+                console.error('加载设备列表失败:', error);
+                alert('加载设备列表失败，请稍后重试');
+            }
+        }
+
+        // 显示可借用设备（带分页）
+        function displayBorrowDevices() {
+            const tbody = document.getElementById('borrow-device-list');
+            tbody.innerHTML = '';
+
+            const startIndex = (currentBorrowPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, borrowDevices.length);
+            const paginatedDevices = borrowDevices.slice(startIndex, endIndex);
+
+            paginatedDevices.forEach(device => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${device.equipnum}</td>
+                <td>${device.equipname}</td>
+                <td>${device.equipkind}</td>
+                <td>${device.equipmodel}</td>
+                <td><span class="status status-${device.equipstatus.toLowerCase()}">${getStatusText(device.equipstatus)}</span></td>
+                <td>
+                    <button class="action-btn btn-primary" onclick="requestBorrow(${device.equipid})" ${device.equipstatus !== 'AVAILABLE' ? 'disabled' : ''}>申请借用</button>
+                </td>
+            `;
+                tbody.appendChild(row);
+            });
+
+            // 生成分页导航
+            generatePagination('borrow-pagination', borrowDevices.length, currentBorrowPage, (page) => {
+                currentBorrowPage = page;
+                displayBorrowDevices();
+            });
+        }
+
+        // 申请借用设备
+        async function requestBorrow(equipId) {
+            if (!currentUser.id) {
+                alert('请先登录');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/borrow-return/borrow?userId=${currentUser.id}&equipId=${equipId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert('申请成功，请等待审核');
+                    loadBorrowDevices();
+                } else {
+                    alert('申请失败: ' + (await response.text()));
+                }
+            } catch (error) {
+                console.error('申请借用失败:', error);
+                alert('申请借用失败，请稍后重试');
+            }
+        }
+
+        // 加载待归还设备列表
+        async function loadReturnDevices() {
+            if (!currentUser.id) {
+                alert('请先登录');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/borrow-return/to-return?userId=${currentUser.id}`);
+                returnRecords = await response.json();
+
+                displayReturnDevices();
+            } catch (error) {
+                console.error('加载待归还设备失败:', error);
+                alert('加载待归还设备失败，请稍后重试');
+            }
+        }
+
+        // 显示待归还设备（带分页）
+        async function displayReturnDevices() {
+            const tbody = document.getElementById('return-device-list');
+            tbody.innerHTML = '';
+
+            const startIndex = (currentReturnPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, returnRecords.length);
+            const paginatedRecords = returnRecords.slice(startIndex, endIndex);
+
+            for (const record of paginatedRecords) {
+                // 获取设备信息
+                const deviceResponse = await fetch(`http://localhost:8080/api/equipment/${record.equipid}`);
+                const device = await deviceResponse.json();
+
+                // 计算应还日期（借用日期+2周）
+                const borrowDate = new Date(record.borrowdate);
+                const dueDate = new Date(borrowDate);
+                dueDate.setDate(dueDate.getDate() + 14);
+
+                // 检查是否逾期
+                const today = new Date();
+                const isOverdue = today > dueDate;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${device.equipnum}</td>
+                <td>${device.equipname}</td>
+                <td>${formatDate(borrowDate)}</td>
+                <td>${formatDate(dueDate)}</td>
+                <td><span class="status ${isOverdue ? 'status-overdue' : 'status-borrowed'}">${isOverdue ? '已逾期' : '借用中'}</span></td>
+                <td>
+                    <button class="action-btn btn-success" onclick="returnDevice(${record.id})">归还设备</button>
+                    ${isOverdue ? `<button class="action-btn btn-danger" onclick="extendBorrow(${record.id})">申请延期</button>` : ''}
+                </td>
+            `;
+                tbody.appendChild(row);
+            }
+
+            // 生成分页导航
+            generatePagination('return-pagination', returnRecords.length, currentReturnPage, (page) => {
+                currentReturnPage = page;
+                displayReturnDevices();
+            });
+        }
+
+        // 归还设备
+        async function returnDevice(recordId) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/borrow-return/return?recordId=${recordId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert('归还成功');
+                    loadReturnDevices();
+                } else {
+                    alert('归还失败: ' + (await response.text()));
+                }
+            } catch (error) {
+                console.error('归还设备失败:', error);
+                alert('归还设备失败，请稍后重试');
+            }
+        }
+
+        // 申请延期
+        async function extendBorrow(recordId) {
+            if (!currentUser.id) {
+                alert('请先登录');
+                return;
+            }
+
+            if (!confirm('确定要申请延期吗？系统将自动归还当前设备并重新申请借用。')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/borrow-return/extend?recordId=${recordId}&userId=${currentUser.id}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert('延期申请已提交');
+                    loadReturnDevices();
+                } else {
+                    alert('延期申请失败: ' + (await response.text()));
+                }
+            } catch (error) {
+                console.error('申请延期失败:', error);
+                alert('申请延期失败，请稍后重试');
+            }
+        }
+
+        // 加载借还记录
+        async function loadRecords() {
+            if (!currentUser.id) {
+                alert('请先登录');
+                return;
+            }
+
+            const deviceName = document.getElementById('record-device-name').value;
+            const recordType = document.getElementById('record-type').value;
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/borrow-return/user-records?userId=${currentUser.id}`);
+                allRecords = await response.json();
+
+                // 前端筛选
+                let filteredRecords = [...allRecords];
+
+                if (deviceName) {
+                    filteredRecords = await Promise.all(filteredRecords.map(async record => {
+                        const deviceResponse = await fetch(`http://localhost:8080/api/equipment/${record.equipid}`);
+                        const device = await deviceResponse.json();
+                        return { ...record, deviceName: device.equipname };
+                    }));
+
+                    filteredRecords = filteredRecords.filter(record =>
+                        record.deviceName.toLowerCase().includes(deviceName.toLowerCase())
+                    );
+                }
+
+                if (recordType) {
+                    filteredRecords = filteredRecords.filter(record => record.equipstatus === recordType);
+                }
+
+                displayRecords(filteredRecords);
+            } catch (error) {
+                console.error('加载借还记录失败:', error);
+                alert('加载借还记录失败，请稍后重试');
+            }
+        }
+
+        // 显示借还记录（带分页）
+        async function displayRecords(records) {
+            const tbody = document.getElementById('records-list');
+            tbody.innerHTML = '';
+
+            const startIndex = (currentRecordsPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, records.length);
+            const paginatedRecords = records.slice(startIndex, endIndex);
+
+            for (const record of paginatedRecords) {
+                // 获取设备信息
+                const deviceResponse = await fetch(`http://localhost:8080/api/equipment/${record.equipid}`);
+                const device = await deviceResponse.json();
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>BR-${record.id.toString().padStart(6, '0')}</td>
+                <td>${device.equipname}</td>
+                <td>${record.returndate ? '归还' : '借用'}</td>
+                <td>${formatDate(new Date(record.borrowdate))}</td>
+                <td>${record.returndate ? formatDate(new Date(record.returndate)) : '-'}</td>
+                <td><span class="status status-${record.equipstatus.toLowerCase()}">${getStatusText(record.equipstatus)}</span></td>
+            `;
+                tbody.appendChild(row);
+            }
+
+            // 生成分页导航
+            generatePagination('records-pagination', records.length, currentRecordsPage, (page) => {
+                currentRecordsPage = page;
+                displayRecords(records);
+            });
+        }
+
+        // 生成分页导航
+        function generatePagination(elementId, totalItems, currentPage, pageChangeCallback) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const paginationElement = document.getElementById(elementId);
+            paginationElement.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // 上一页按钮
+            if (currentPage > 1) {
+                const prevLink = document.createElement('a');
+                prevLink.href = '#';
+                prevLink.innerHTML = '&laquo;';
+                prevLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    pageChangeCallback(currentPage - 1);
+                });
+                paginationElement.appendChild(prevLink);
+            }
+
+            // 页码按钮
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLink = document.createElement('a');
+                pageLink.href = '#';
+                pageLink.textContent = i;
+                if (i === currentPage) {
+                    pageLink.className = 'active';
+                }
+                pageLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    pageChangeCallback(i);
+                });
+                paginationElement.appendChild(pageLink);
+            }
+
+            // 下一页按钮
+            if (currentPage < totalPages) {
+                const nextLink = document.createElement('a');
+                nextLink.href = '#';
+                nextLink.innerHTML = '&raquo;';
+                nextLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    pageChangeCallback(currentPage + 1);
+                });
+                paginationElement.appendChild(nextLink);
+            }
+        }
+
+        // 辅助函数：格式化日期
+        function formatDate(date) {
+            if (!date) return '-';
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // 辅助函数：获取状态文本
+        function getStatusText(status) {
+            const statusMap = {
+                'AVAILABLE': '可用',
+                'IN_USE': '使用中',
+                'PENDING': '待审核',
+                'MAINTENANCE': '维护中',
+                'OUT_OF_SERVICE': '停用',
+                'BORROWED': '借用中',
+                'RETURNED': '已归还',
+                'OVERDUE': '已逾期'
+            };
+            return statusMap[status] || status;
+        }
     </script>
 </body>
+
 </html>
