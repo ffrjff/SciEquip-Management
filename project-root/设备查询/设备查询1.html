@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备查询 - 科研设备管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .page-header h1 i {
+            color: #3498db;
+        }
+        
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .search-panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            grid-column: 1 / -1;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .results-panel {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .results-header {
+            padding: 1rem 1.5rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .results-count {
+            color: #7f8c8d;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-borrowed {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-maintenance {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-link {
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 0.75rem;
+        }
+        
+        .action-link:hover {
+            text-decoration: underline;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+        }
+        
+        .pagination a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .pagination a:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span>欢迎，张教授</span>
+            <a href="#">个人中心</a>
+            <a href="#">退出登录</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-search"></i> 设备查询</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 设备查询
+            </div>
+        </div>
+        
+        <div class="search-panel">
+            <h2>筛选条件</h2>
+            <form class="search-form">
+                <div class="form-group">
+                    <label for="device-name">设备名称</label>
+                    <input type="text" id="device-name" class="form-control" placeholder="输入设备名称">
+                </div>
+                
+                <div class="form-group">
+                    <label for="device-type">设备类型</label>
+                    <select id="device-type" class="form-control">
+                        <option value="">全部类型</option>
+                        <option value="1">分析仪器</option>
+                        <option value="2">实验设备</option>
+                        <option value="3">测量仪器</option>
+                        <option value="4">计算机设备</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="device-status">设备状态</label>
+                    <select id="device-status" class="form-control">
+                        <option value="">全部状态</option>
+                        <option value="available">可用</option>
+                        <option value="borrowed">借出</option>
+                        <option value="maintenance">维护中</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="purchase-date">购置日期</label>
+                    <input type="date" id="purchase-date" class="form-control">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-secondary">重置</button>
+                    <button type="submit" class="btn btn-primary">查询</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="results-panel">
+            <div class="results-header">
+                <div class="results-count">共找到 24 条记录</div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>设备编号</th>
+                        <th>设备名称</th>
+                        <th>设备类型</th>
+                        <th>规格型号</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>DEV-2023-001</td>
+                        <td>高效液相色谱仪</td>
+                        <td>分析仪器</td>
+                        <td>Agilent 1260</td>
+                        <td><span class="status status-available">可用</span></td>
+                        <td>
+                            <a href="#" class="action-link">详情</a>
+                            <a href="#" class="action-link">借用</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DEV-2023-005</td>
+                        <td>紫外可见分光光度计</td>
+                        <td>分析仪器</td>
+                        <td>Shimadzu UV-2600</td>
+                        <td><span class="status status-borrowed">借出中</span></td>
+                        <td>
+                            <a href="#" class="action-link">详情</a>
+                            <a href="#" class="action-link">预约</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DEV-2023-008</td>
+                        <td>电子天平</td>
+                        <td>测量仪器</td>
+                        <td>METTLER AE200</td>
+                        <td><span class="status status-available">可用</span></td>
+                        <td>
+                            <a href="#" class="action-link">详情</a>
+                            <a href="#" class="action-link">借用</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DEV-2023-012</td>
+                        <td>离心机</td>
+                        <td>实验设备</td>
+                        <td>Eppendorf 5810R</td>
+                        <td><span class="status status-maintenance">维护中</span></td>
+                        <td>
+                            <a href="#" class="action-link">详情</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DEV-2023-015</td>
+                        <td>PCR仪</td>
+                        <td>实验设备</td>
+                        <td>Bio-Rad T100</td>
+                        <td><span class="status status-available">可用</span></td>
+                        <td>
+                            <a href="#" class="action-link">详情</a>
+                            <a href="#" class="action-link">借用</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="pagination">
+                <a href="#">&laquo;</a>
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">&raquo;</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 科研设备管理系统</p>
+    </footer>
+</body>
+</html>

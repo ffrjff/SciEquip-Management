@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 科研设备管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .page-header h1 i {
+            color: #3498db;
+        }
+        
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .profile-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3498db;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-title {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .detail-value {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .device-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .device-list th, .device-list td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .device-list th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .device-list tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-borrowed {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-overdue {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+            margin-right: 0.5rem;
+        }
+        
+        .action-btn.btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .action-btn.btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem 0;
+        }
+        
+        .pagination a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .pagination a:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+        
+        .message-list {
+            list-style: none;
+        }
+        
+        .message-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+        
+        .message-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .message-item.unread {
+            background-color: #e7f4ff;
+        }
+        
+        .message-title {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .message-time {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+        }
+        
+        .message-content {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+        
+        .password-strength {
+            height: 5px;
+            background-color: #e9ecef;
+            border-radius: 2.5px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 60%;
+            background-color: #28a745;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span>欢迎，张教授</span>
+            <a href="#">个人中心</a>
+            <a href="#">退出登录</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-user-circle"></i> 个人中心</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 个人中心
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="profile">个人资料</div>
+            <div class="tab" data-tab="borrow">我的借用</div>
+            <div class="tab" data-tab="messages">消息通知</div>
+            <div class="tab" data-tab="security">账户安全</div>
+        </div>
+        
+        <!-- 个人资料标签页 -->
+        <div id="profile" class="tab-content active">
+            <div class="card">
+                <div class="profile-section">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="用户头像" class="profile-avatar">
+                    <div class="profile-info">
+                        <h2 class="profile-name">张教授</h2>
+                        <div class="profile-title">高级研究员 | 材料科学实验室</div>
+                        <div class="profile-details">
+                            <div class="detail-item">
+                                <div class="detail-label">工号</div>
+                                <div class="detail-value">RS20230032</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">部门</div>
+                                <div class="detail-value">材料科学与工程学院</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">邮箱</div>
+                                <div class="detail-value">zhang.prof@university.edu</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">联系电话</div>
+                                <div class="detail-value">138-0013-8000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2><i class="fas fa-edit"></i> 编辑资料</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-name">姓名</label>
+                            <input type="text" id="edit-name" class="form-control" value="张教授">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-title">职称</label>
+                            <input type="text" id="edit-title" class="form-control" value="高级研究员">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-department">部门</label>
+                            <input type="text" id="edit-department" class="form-control" value="材料科学与工程学院">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-lab">实验室</label>
+                            <input type="text" id="edit-lab" class="form-control" value="材料科学实验室">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-email">邮箱</label>
+                            <input type="email" id="edit-email" class="form-control" value="zhang.prof@university.edu">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-phone">联系电话</label>
+                            <input type="tel" id="edit-phone" class="form-control" value="138-0013-8000">
+                        </div>
+                    </div>
+                    
+                    <div class="avatar-upload">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="头像预览" class="avatar-preview" id="avatarPreview">
+                        <div>
+                            <label for="avatarInput" class="btn btn-primary">更换头像</label>
+                            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                            <div style="font-size: 0.8rem; color: #7f8c8d; margin-top: 0.5rem;">支持JPG/PNG格式，大小不超过2MB</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-bio">个人简介</label>
+                        <textarea id="edit-bio" class="form-control" rows="4">材料科学领域专家，主要研究方向为新型功能材料的开发与应用。主持国家级科研项目5项，发表SCI论文30余篇。</textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">取消</button>
+                        <button type="submit" class="btn btn-primary">保存更改</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 我的借用标签页 -->
+        <div id="borrow" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 借用记录查询</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="borrow-device-name">设备名称</label>
+                            <input type="text" id="borrow-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="borrow-status">借用状态</label>
+                            <select id="borrow-status" class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="borrowed">借用中</option>
+                                <option value="returned">已归还</option>
+                                <option value="overdue">已逾期</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="borrow-date">借用日期</label>
+                            <input type="date" id="borrow-date" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 我的借用记录</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>借用单号</th>
+                            <th>设备名称</th>
+                            <th>借用日期</th>
+                            <th>应还日期</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BOR-2023-056</td>
+                            <td>高效液相色谱仪</td>
+                            <td>2023-06-15</td>
+                            <td>2023-06-22</td>
+                            <td><span class="status status-borrowed">借用中</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">详情</button>
+                                <button class="action-btn btn-success">归还</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BOR-2023-042</td>
+                            <td>紫外可见分光光度计</td>
+                            <td>2023-06-10</td>
+                            <td>2023-06-17</td>
+                            <td><span class="status status-overdue">已逾期</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">详情</button>
+                                <button class="action-btn btn-success">归还</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BOR-2023-038</td>
+                            <td>电子天平</td>
+                            <td>2023-06-05</td>
+                            <td>2023-06-12</td>
+                            <td><span class="status status-available">已归还</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">详情</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BOR-2023-029</td>
+                            <td>离心机</td>
+                            <td>2023-06-01</td>
+                            <td>2023-06-08</td>
+                            <td><span class="status status-available">已归还</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">详情</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 消息通知标签页 -->
+        <div id="messages" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-bell"></i> 消息通知</h2>
+                <ul class="message-list">
+                    <li class="message-item unread">
+                        <div class="message-title">
+                            <span>设备归还提醒</span>
+                            <span class="message-time">今天 09:30</span>
+                        </div>
+                        <div class="message-content">
+                            您借用的"高效液相色谱仪(DEV-2023-001)"将于3天后到期，请按时归还。
+                        </div>
+                    </li>
+                    <li class="message-item unread">
+                        <div class="message-title">
+                            <span>借用申请已批准</span>
+                            <span class="message-time">昨天 14:15</span>
+                        </div>
+                        <div class="message-content">
+                            您申请的"紫外可见分光光度计(DEV-2023-005)"借用请求已获批准，请及时领取设备。
+                        </div>
+                    </li>
+                    <li class="message-item">
+                        <div class="message-title">
+                            <span>系统维护通知</span>
+                            <span class="message-time">2023-06-10</span>
+                        </div>
+                        <div class="message-content">
+                            系统将于2023年6月15日00:00至06:00进行维护升级，期间将无法使用，请提前做好安排。
+                        </div>
+                    </li>
+                    <li class="message-item">
+                        <div class="message-title">
+                            <span>新设备上线通知</span>
+                            <span class="message-time">2023-06-05</span>
+                        </div>
+                        <div class="message-content">
+                            实验室新购置的"原子力显微镜(DEV-2023-015)"已上线，欢迎预约使用。
+                        </div>
+                    </li>
+                    <li class="message-item">
+                        <div class="message-title">
+                            <span>密码修改成功</span>
+                            <span class="message-time">2023-05-28</span>
+                        </div>
+                        <div class="message-content">
+                            您的账户密码已于2023年5月28日14:30成功修改，如非本人操作，请立即联系管理员。
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 账户安全标签页 -->
+        <div id="security" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-shield-alt"></i> 账户安全</h2>
+                
+                <div class="form-group">
+                    <label>登录账号</label>
+                    <div class="form-control" style="background-color: #f8f9fa;">zhang.prof</div>
+                </div>
+                
+                <form>
+                    <div class="form-group">
+                        <label for="current-password">当前密码</label>
+                        <input type="password" id="current-password" class="form-control" placeholder="输入当前密码">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-password">新密码</label>
+                        <input type="password" id="new-password" class="form-control" placeholder="输入新密码">
+                        <div class="password-strength">
+                            <div class="password-strength-bar" style="width: 60%;"></div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #7f8c8d; margin-top: 0.5rem;">密码强度：中等</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">确认新密码</label>
+                        <input type="password" id="confirm-password" class="form-control" placeholder="再次输入新密码">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">修改密码</button>
+                    </div>
+                </form>
+                
+                <h2 style="margin-top: 2rem;"><i class="fas fa-lock"></i> 登录记录</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>登录时间</th>
+                            <th>登录IP</th>
+                            <th>登录地点</th>
+                            <th>登录设备</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2023-06-18 09:15</td>
+                            <td>192.168.1.100</td>
+                            <td>实验室A栋</td>
+                            <td>Windows 10 | Chrome</td>
+                            <td>成功</td>
+                        </tr>
+                        <tr>
+                            <td>2023-06-17 14:30</td>
+                            <td>192.168.1.100</td>
+                            <td>实验室A栋</td>
+                            <td>Windows 10 | Chrome</td>
+                            <td>成功</td>
+                        </tr>
+                        <tr>
+                            <td>2023-06-16 08:45</td>
+                            <td>192.168.2.15</td>
+                            <td>办公室</td>
+                            <td>MacOS | Safari</td>
+                            <td>成功</td>
+                        </tr>
+                        <tr>
+                            <td>2023-06-15 22:10</td>
+                            <td>123.45.67.89</td>
+                            <td>北京市</td>
+                            <td>iPhone | Safari</td>
+                            <td>成功</td>
+                        </tr>
+                        <tr>
+                            <td>2023-06-10 11:20</td>
+                            <td>192.168.1.100</td>
+                            <td>实验室A栋</td>
+                            <td>Windows 10 | Chrome</td>
+                            <td>成功</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="form-actions" style="margin-top: 1.5rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-danger">退出所有设备</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 科研设备管理系统 - 版权所有</p>
+        <p>技术支持：信息技术中心 | 联系电话：123-456789</p>
+    </footer>
+
+    <script>
+        // 标签页切换功能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有标签和内容的active类
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 为当前点击的标签和对应内容添加active类
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 头像上传预览功能
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('avatarPreview').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 密码强度检测
+        document.getElementById('new-password').addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            const strengthBar = document.querySelector('.password-strength-bar');
+            const strengthText = document.querySelector('.password-strength + div');
+            
+            if (password.length >= 8) strength += 1;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 1;
+            if (password.match(/\d/)) strength += 1;
+            if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+            
+            let width = 0;
+            let text = '';
+            let color = '';
+            
+            switch(strength) {
+                case 0:
+                    width = 0;
+                    text = '无';
+                    color = '#dc3545';
+                    break;
+                case 1:
+                    width = 25;
+                    text = '弱';
+                    color = '#dc3545';
+                    break;
+                case 2:
+                    width = 50;
+                    text = '中等';
+                    color = '#ffc107';
+                    break;
+                case 3:
+                    width = 75;
+                    text = '强';
+                    color = '#28a745';
+                    break;
+                case 4:
+                    width = 100;
+                    text = '非常强';
+                    color = '#28a745';
+                    break;
+            }
+            
+            strengthBar.style.width = width + '%';
+            strengthBar.style.backgroundColor = color;
+            strengthText.textContent = '密码强度：' + text;
+            strengthText.style.color = color;
+        });
+    </script>
+</body>
+</html>

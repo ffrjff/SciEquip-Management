@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备维护 - 科研设备管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .page-header h1 i {
+            color: #3498db;
+        }
+        
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .device-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .device-list th, .device-list td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .device-list th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .device-list tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-maintenance {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-broken {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-scrapped {
+            background-color: #d6d8d9;
+            color: #1b1e21;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+            margin-right: 0.5rem;
+        }
+        
+        .action-btn.btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .action-btn.btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .action-btn.btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .action-btn.btn-warning:hover {
+            background-color: #e0a800;
+        }
+        
+        .action-btn.btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .action-btn.btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .action-btn.btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .action-btn.btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem 0;
+        }
+        
+        .pagination a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .pagination a:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 600px;
+            max-width: 90%;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            color: #2c3e50;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .maintenance-progress {
+            margin-top: 1rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #3498db;
+            width: 60%;
+        }
+        
+        .progress-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span>欢迎，设备管理员</span>
+            <a href="#">个人中心</a>
+            <a href="#">退出登录</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-tools"></i> 设备维护</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 设备维护
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="repair">维修管理</div>
+            <div class="tab" data-tab="scrap">报废管理</div>
+            <div class="tab" data-tab="records">维护记录</div>
+            <!-- <div class="tab" data-tab="schedule">维护计划</div> -->
+        </div>
+        
+        <!-- 维修管理标签页 -->
+        <div id="repair" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 维修设备查询</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="repair-device-name">设备名称</label>
+                            <input type="text" id="repair-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="repair-device-type">设备类型</label>
+                            <select id="repair-device-type" class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="1">分析仪器</option>
+                                <option value="2">实验设备</option>
+                                <option value="3">测量仪器</option>
+                                <option value="4">计算机设备</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="repair-status">维修状态</label>
+                            <select id="repair-status" class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="pending">待处理</option>
+                                <option value="in-progress">维修中</option>
+                                <option value="completed">已完成</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 维修任务列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>维修单号</th>
+                            <th>设备名称</th>
+                            <th>故障类型</th>
+                            <th>提交日期</th>
+                            <th>维修状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>REP-2023-056</td>
+                            <td>高效液相色谱仪</td>
+                            <td>泵压力异常</td>
+                            <td>2023-06-15</td>
+                            <td><span class="status status-maintenance">维修中</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                                <button class="action-btn btn-success">完成维修</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>REP-2023-042</td>
+                            <td>离心机</td>
+                            <td>转子不平衡</td>
+                            <td>2023-06-14</td>
+                            <td><span class="status status-maintenance">维修中</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                                <button class="action-btn btn-success">完成维修</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>REP-2023-038</td>
+                            <td>紫外分光光度计</td>
+                            <td>光源故障</td>
+                            <td>2023-06-10</td>
+                            <td><span class="status status-normal">已完成</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>REP-2023-029</td>
+                            <td>电子天平</td>
+                            <td>校准异常</td>
+                            <td>2023-06-05</td>
+                            <td><span class="status status-broken">待处理</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                                <button class="action-btn btn-warning">开始维修</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> 新增维护申请</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-scrap-device">选择设备</label>
+                            <select id="new-scrap-device" class="form-control" required>
+                                <option value="">请选择要维护的设备</option>
+                                <option value="DEV-2020-005">老旧离心机 (DEV-2020-005)</option>
+                                <option value="DEV-2019-008">旧版PCR仪 (DEV-2019-008)</option>
+                                <option value="DEV-2018-003">第一代光谱仪 (DEV-2018-003)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- <div class="form-group">
+                            <label for="scrap-reason">报废原因</label>
+                            <select id="scrap-reason" class="form-control" required>
+                                <option value="">请选择报废原因</option>
+                                <option value="broken">设备损坏无法修复</option>
+                                <option value="obsolete">技术落后淘汰</option>
+                                <option value="cost">维修成本过高</option>
+                                <option value="other">其他原因</option>
+                            </select>
+                        </div> -->
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="scrap-description">详细说明</label>
+                        <textarea id="scrap-description" class="form-control" placeholder="请详细说明报废原因..." required></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-danger">提交维护申请</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 报废管理标签页 -->
+        <div id="scrap" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-trash-alt"></i> 报废设备查询</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="scrap-device-name">设备名称</label>
+                            <input type="text" id="scrap-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="scrap-device-type">设备类型</label>
+                            <select id="scrap-device-type" class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="1">分析仪器</option>
+                                <option value="2">实验设备</option>
+                                <option value="3">测量仪器</option>
+                                <option value="4">计算机设备</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="scrap-status">报废状态</label>
+                            <select id="scrap-status" class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="pending">待审核</option>
+                                <option value="approved">已批准</option>
+                                <option value="rejected">已拒绝</option>
+                                <option value="completed">已完成</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 报废申请列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>申请单号</th>
+                            <th>设备名称</th>
+                            <th>申请原因</th>
+                            <th>申请日期</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SCR-2023-015</td>
+                            <td>老旧离心机</td>
+                            <td>设备老化，维修成本过高</td>
+                            <td>2023-06-18</td>
+                            <td><span class="status status-maintenance">待审核</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                                <button class="action-btn btn-danger">撤销申请</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>SCR-2023-012</td>
+                            <td>第一代PCR仪</td>
+                            <td>技术落后，无法满足实验需求</td>
+                            <td>2023-06-15</td>
+                            <td><span class="status status-normal">已批准</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                                <button class="action-btn btn-success">完成报废</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>SCR-2023-008</td>
+                            <td>旧版光谱仪</td>
+                            <td>核心部件损坏，无法修复</td>
+                            <td>2023-06-10</td>
+                            <td><span class="status status-broken">已拒绝</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>SCR-2023-005</td>
+                            <td>过时色谱仪</td>
+                            <td>设备淘汰，无维修价值</td>
+                            <td>2023-06-05</td>
+                            <td><span class="status status-scrapped">已完成</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> 新增报废申请</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-scrap-device">选择设备</label>
+                            <select id="new-scrap-device" class="form-control" required>
+                                <option value="">请选择要报废的设备</option>
+                                <option value="DEV-2020-005">老旧离心机 (DEV-2020-005)</option>
+                                <option value="DEV-2019-008">旧版PCR仪 (DEV-2019-008)</option>
+                                <option value="DEV-2018-003">第一代光谱仪 (DEV-2018-003)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="scrap-reason">报废原因</label>
+                            <select id="scrap-reason" class="form-control" required>
+                                <option value="">请选择报废原因</option>
+                                <option value="broken">设备损坏无法修复</option>
+                                <option value="obsolete">技术落后淘汰</option>
+                                <option value="cost">维修成本过高</option>
+                                <option value="other">其他原因</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="scrap-description">详细说明</label>
+                        <textarea id="scrap-description" class="form-control" placeholder="请详细说明报废原因..." required></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-danger">提交报废申请</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 维护记录标签页 -->
+        <div id="records" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 维护记录查询</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="record-device-name">设备名称</label>
+                            <input type="text" id="record-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="record-type">记录类型</label>
+                            <select id="record-type" class="form-control">
+                                <option value="">全部记录</option>
+                                <option value="repair">维修记录</option>
+                                <option value="scrap">报废记录</option>
+                                <option value="maintenance">保养记录</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="record-date">日期范围</label>
+                            <input type="date" id="record-date" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-history"></i> 维护记录列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>记录编号</th>
+                            <th>设备名称</th>
+                            <th>记录类型</th>
+                            <th>维护日期</th>
+                            <th>维护人员</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MNT-2023-056</td>
+                            <td>高效液相色谱仪</td>
+                            <td>维修</td>
+                            <td>2023-06-15</td>
+                            <td>张技术员</td>
+                            <td><span class="status status-normal">已完成</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MNT-2023-042</td>
+                            <td>离心机</td>
+                            <td>保养</td>
+                            <td>2023-06-10</td>
+                            <td>李技术员</td>
+                            <td><span class="status status-normal">已完成</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MNT-2023-038</td>
+                            <td>紫外分光光度计</td>
+                            <td>维修</td>
+                            <td>2023-06-05</td>
+                            <td>王技术员</td>
+                            <td><span class="status status-normal">已完成</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>MNT-2023-029</td>
+                            <td>电子天平</td>
+                            <td>校准</td>
+                            <td>2023-06-01</td>
+                            <td>赵技术员</td>
+                            <td><span class="status status-normal">已完成</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看详情</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 维护计划标签页
+        <div id="schedule" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-calendar-alt"></i> 维护计划管理</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="schedule-device">选择设备</label>
+                            <select id="schedule-device" class="form-control">
+                                <option value="">全部设备</option>
+                                <option value="DEV-2023-001">高效液相色谱仪</option>
+                                <option value="DEV-2023-005">紫外分光光度计</option>
+                                <option value="DEV-2023-012">离心机</option>
+                                <option value="DEV-2022-008">电子天平</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="schedule-type">计划类型</label>
+                            <select id="schedule-type" class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="routine">例行保养</option>
+                                <option value="check">定期检查</option>
+                                <option value="calibration">校准</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="schedule-status">计划状态</label>
+                            <select id="schedule-status" class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="pending">待执行</option>
+                                <option value="in-progress">执行中</option>
+                                <option value="completed">已完成</option>
+                                <option value="overdue">已逾期</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 维护计划列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>计划编号</th>
+                            <th>设备名称</th>
+                            <th>计划类型</th>
+                            <th>计划日期</th>
+                            <th>负责人</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PLN-2023-056</td>
+                            <td>高效液相色谱仪</td>
+                            <td>例行保养</td>
+                            <td>2023-06-20</td>
+                            <td>张技术员</td>
+                            <td><span class="status status-maintenance">待执行</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看</button>
+                                <button class="action-btn btn-success">开始执行</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PLN-2023-042</td>
+                            <td>离心机</td>
+                            <td>定期检查</td>
+                            <td>2023-06-18</td>
+                            <td>李技术员</td>
+                            <td><span class="status status-maintenance">执行中</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看</button>
+                                <button class="action-btn btn-success">完成</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PLN-2023-038</td>
+                            <td>电子天平</td>
+                            <td>校准</td>
+                            <td>2023-06-15</td>
+                            <td>王技术员</td>
+                            <td><span class="status status-normal">已完成</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PLN-2023-029</td>
+                            <td>紫外分光光度计</td>
+                            <td>例行保养</td>
+                            <td>2023-06-10</td>
+                            <td>赵技术员</td>
+                            <td><span class="status status-broken">已逾期</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看</button>
+                                <button class="action-btn btn-warning">重新安排</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> 新增维护计划</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-schedule-device">选择设备</label>
+                            <select id="new-schedule-device" class="form-control" required>
+                                <option value="">请选择设备</option>
+                                <option value="DEV-2023-001">高效液相色谱仪</option>
+                                <option value="DEV-2023-005">紫外分光光度计</option>
+                                <option value="DEV-2023-012">离心机</option>
+                                <option value="DEV-2022-008">电子天平</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new-schedule-type">计划类型</label>
+                            <select id="new-schedule-type" class="form-control" required>
+                                <option value="">请选择计划类型</option>
+                                <option value="routine">例行保养</option>
+                                <option value="check">定期检查</option>
+                                <option value="calibration">校准</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-schedule-date">计划日期</label>
+                            <input type="date" id="new-schedule-date" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new-schedule-person">负责人</label>
+                            <select id="new-schedule-person" class="form-control" required>
+                                <option value="">请选择负责人</option>
+                                <option value="1">张技术员</option>
+                                <option value="2">李技术员</option>
+                                <option value="3">王技术员</option>
+                                <option value="4">赵技术员</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-schedule-desc">计划描述</label>
+                        <textarea id="new-schedule-desc" class="form-control" placeholder="请输入维护计划的具体内容和要求..." required></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-success">创建计划</button>
+                    </div>
+                </form>
+            </div>
+        </div> -->
+    </div>
+    
+    <!-- 维修详情模态框 -->
+    <div id="repairDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-tools"></i> 维修详情</h3>
+                <button class="close-btn" onclick="closeRepairModal()">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>维修单号</label>
+                <div class="form-control" style="background-color: #f8f9fa;">REP-2023-056</div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>设备名称</label>
+                    <div class="form-control" style="background-color: #f8f9fa;">高效液相色谱仪</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>设备编号</label>
+                    <div class="form-control" style="background-color: #f8f9fa;">DEV-2023-001</div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>故障类型</label>
+                    <div class="form-control" style="background-color: #f8f9fa;">泵压力异常</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>提交日期</label>
+                    <div class="form-control" style="background-color: #f8f9fa;">2023-06-15</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>故障描述</label>
+                <div class="form-control" style="background-color: #f8f9fa; min-height: 80px;">
+                    设备运行时泵压力不稳定，经常出现压力波动，影响分析结果准确性。
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>维修进度</label>
+                <div class="maintenance-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-text">已完成60% - 已更换密封圈，正在测试压力稳定性</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="repair-note">维修记录</label>
+                <textarea id="repair-note" class="form-control" placeholder="请输入维修进展和记录..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="repair-parts">更换零件</label>
+                <input type="text" id="repair-parts" class="form-control" placeholder="输入更换的零件名称和数量">
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeRepairModal()">关闭</button>
+                <button type="button" class="btn btn-primary">保存记录</button>
+                <button type="button" class="btn btn-success">完成维修</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 科研设备管理系统 - 版权所有</p>
+        <p>技术支持：信息技术中心 | 联系电话：123-456789</p>
+    </footer>
+
+    <script>
+        // 标签页切换功能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有标签和内容的active类
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 为当前点击的标签和对应内容添加active类
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 维修详情模态框功能
+        function openRepairModal() {
+            document.getElementById('repairDetailModal').style.display = 'flex';
+        }
+        
+        function closeRepairModal() {
+            document.getElementById('repairDetailModal').style.display = 'none';
+        }
+        
+        // 为查看详情按钮添加点击事件
+        document.querySelectorAll('.action-btn.btn-primary').forEach(btn => {
+            if (btn.textContent === '查看详情') {
+                btn.addEventListener('click', openRepairModal);
+            }
+        });
+        
+        // 点击模态框外部关闭模态框
+        window.onclick = function(event) {
+            const modal = document.getElementById('repairDetailModal');
+            if (event.target === modal) {
+                closeRepairModal();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备管理 - 科研设备管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .page-header h1 i {
+            color: #3498db;
+        }
+        
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .device-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .device-list th, .device-list td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .device-list th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .device-list tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-borrowed {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-maintenance {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-scrapped {
+            background-color: #d6d8d9;
+            color: #1b1e21;
+        }
+        
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+            margin-right: 0.5rem;
+        }
+        
+        .action-btn.btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .action-btn.btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .action-btn.btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .action-btn.btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .action-btn.btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .action-btn.btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem 0;
+        }
+        
+        .pagination a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+        }
+        
+        .pagination a.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .pagination a:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 600px;
+            max-width: 90%;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            color: #2c3e50;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span>欢迎，管理员</span>
+            <a href="#">个人中心</a>
+            <a href="#">退出登录</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-microscope"></i> 设备管理</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 设备管理
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="device-list">设备列表</div>
+            <div class="tab" data-tab="add-device">添加设备</div>
+            <div class="tab" data-tab="category">分类管理</div>
+        </div>
+        
+        <!-- 设备列表标签页 -->
+        <div id="device-list" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 设备查询</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="search-device-name">设备名称</label>
+                            <input type="text" id="search-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="search-device-type">设备类型</label>
+                            <select id="search-device-type" class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="1">分析仪器</option>
+                                <option value="2">实验设备</option>
+                                <option value="3">测量仪器</option>
+                                <option value="4">计算机设备</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="search-device-status">设备状态</label>
+                            <select id="search-device-status" class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="available">可用</option>
+                                <option value="borrowed">借出</option>
+                                <option value="maintenance">维修中</option>
+                                <option value="scrapped">已报废</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 设备列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>设备编号</th>
+                            <th>设备名称</th>
+                            <th>设备类型</th>
+                            <th>规格型号</th>
+                            <th>购置日期</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DEV-2023-001</td>
+                            <td>高效液相色谱仪</td>
+                            <td>分析仪器</td>
+                            <td>Agilent 1260</td>
+                            <td>2023-01-15</td>
+                            <td><span class="status status-available">可用</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">编辑</button>
+                                <button class="action-btn btn-danger">报废</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DEV-2023-005</td>
+                            <td>紫外可见分光光度计</td>
+                            <td>分析仪器</td>
+                            <td>Shimadzu UV-2600</td>
+                            <td>2023-02-10</td>
+                            <td><span class="status status-borrowed">借出</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">编辑</button>
+                                <button class="action-btn btn-danger">报废</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DEV-2023-012</td>
+                            <td>离心机</td>
+                            <td>实验设备</td>
+                            <td>Eppendorf 5810R</td>
+                            <td>2023-03-05</td>
+                            <td><span class="status status-maintenance">维修中</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">编辑</button>
+                                <button class="action-btn btn-danger">报废</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DEV-2022-008</td>
+                            <td>电子天平</td>
+                            <td>测量仪器</td>
+                            <td>METTLER AE200</td>
+                            <td>2022-11-20</td>
+                            <td><span class="status status-scrapped">已报废</span></td>
+                            <td>
+                                <button class="action-btn btn-primary">查看</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#">&laquo;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">&raquo;</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 添加设备标签页 -->
+        <div id="add-device" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> 添加新设备</h2>
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="device-name">设备名称</label>
+                            <input type="text" id="device-name" class="form-control" placeholder="输入设备名称" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="device-type">设备类型</label>
+                            <select id="device-type" class="form-control" required>
+                                <option value="">请选择设备类型</option>
+                                <option value="1">分析仪器</option>
+                                <option value="2">实验设备</option>
+                                <option value="3">测量仪器</option>
+                                <option value="4">计算机设备</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="device-model">规格型号</label>
+                            <input type="text" id="device-model" class="form-control" placeholder="输入设备规格型号" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="purchase-date">购置日期</label>
+                            <input type="date" id="purchase-date" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="manufacturer">生产厂家</label>
+                            <input type="text" id="manufacturer" class="form-control" placeholder="输入生产厂家">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="price">价格(元)</label>
+                            <input type="number" id="price" class="form-control" placeholder="输入设备价格">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="device-description">设备描述</label>
+                        <textarea id="device-description" class="form-control" placeholder="输入设备描述信息..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="device-image">设备图片</label>
+                        <input type="file" id="device-image" class="form-control">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-success">保存设备</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 分类管理标签页 -->
+        <div id="category" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-tags"></i> 设备分类管理</h2>
+                <div class="form-row">
+                    <div style="flex: 1;">
+                        <h3 style="margin-bottom: 1rem; color: #2c3e50;">现有分类</h3>
+                        <table class="device-list">
+                            <thead>
+                                <tr>
+                                    <th>分类名称</th>
+                                    <th>设备数量</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>分析仪器</td>
+                                    <td>24</td>
+                                    <td>
+                                        <button class="action-btn btn-primary">编辑</button>
+                                        <button class="action-btn btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>实验设备</td>
+                                    <td>18</td>
+                                    <td>
+                                        <button class="action-btn btn-primary">编辑</button>
+                                        <button class="action-btn btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>测量仪器</td>
+                                    <td>12</td>
+                                    <td>
+                                        <button class="action-btn btn-primary">编辑</button>
+                                        <button class="action-btn btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>计算机设备</td>
+                                    <td>8</td>
+                                    <td>
+                                        <button class="action-btn btn-primary">编辑</button>
+                                        <button class="action-btn btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="flex: 1; padding-left: 1.5rem;">
+                        <h3 style="margin-bottom: 1rem; color: #2c3e50;">添加新分类</h3>
+                        <form>
+                            <div class="form-group">
+                                <label for="new-category-name">分类名称</label>
+                                <input type="text" id="new-category-name" class="form-control" placeholder="输入新分类名称" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="category-description">分类描述</label>
+                                <textarea id="category-description" class="form-control" placeholder="输入分类描述信息..."></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success">添加分类</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑设备模态框 -->
+    <div id="editDeviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-edit"></i> 编辑设备信息</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-device-id">设备编号</label>
+                        <input type="text" id="edit-device-id" class="form-control" value="DEV-2023-001" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-device-name">设备名称</label>
+                        <input type="text" id="edit-device-name" class="form-control" value="高效液相色谱仪" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-device-type">设备类型</label>
+                        <select id="edit-device-type" class="form-control" required>
+                            <option value="1" selected>分析仪器</option>
+                            <option value="2">实验设备</option>
+                            <option value="3">测量仪器</option>
+                            <option value="4">计算机设备</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-device-model">规格型号</label>
+                        <input type="text" id="edit-device-model" class="form-control" value="Agilent 1260" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-purchase-date">购置日期</label>
+                        <input type="date" id="edit-purchase-date" class="form-control" value="2023-01-15" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-device-status">设备状态</label>
+                        <select id="edit-device-status" class="form-control" required>
+                            <option value="available" selected>可用</option>
+                            <option value="borrowed">借出</option>
+                            <option value="maintenance">维修中</option>
+                            <option value="scrapped">已报废</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-device-description">设备描述</label>
+                    <textarea id="edit-device-description" class="form-control">高效液相色谱仪，用于分析化学物质的组成和含量...</textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存更改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 科研设备管理系统</p>
+    </footer>
+
+    <script>
+        // 标签页切换功能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有标签和内容的active类
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 为当前点击的标签和对应内容添加active类
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 模拟编辑按钮点击打开模态框
+        function openEditModal() {
+            document.getElementById('editDeviceModal').style.display = 'flex';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editDeviceModal').style.display = 'none';
+        }
+        
+        // 点击模态框外部关闭模态框
+        window.onclick = function(event) {
+            const modal = document.getElementById('editDeviceModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+        
+        // 为设备列表中的编辑按钮添加点击事件
+        document.querySelectorAll('.action-btn.btn-primary').forEach(btn => {
+            if (btn.textContent === '编辑') {
+                btn.addEventListener('click', openEditModal);
+            }
+        });
+    </script>
+</body>
+</html>
