@@ -1,12 +1,17 @@
 package com.seproject.demo.service;
 
+import com.seproject.demo.entity.BorrowReturn;
+import com.seproject.demo.entity.BorrowReturnStatus;
 import com.seproject.demo.entity.Equipment;
 import com.seproject.demo.entity.EquipmentStatus;
+import com.seproject.demo.entity.EquipmentUsageStat;
+import com.seproject.demo.repository.BorrowReturnRepository;
 import com.seproject.demo.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.List;
@@ -15,10 +20,13 @@ import java.util.List;
 public class EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
+    private final BorrowReturnRepository borrowReturnRepository;
 
     @Autowired
-    public EquipmentService(EquipmentRepository equipmentRepository) {
+    public EquipmentService(EquipmentRepository equipmentRepository, 
+                            BorrowReturnRepository borrowReturnRepository) {
         this.equipmentRepository = equipmentRepository;
+        this.borrowReturnRepository = borrowReturnRepository;
     }
 
     // 查询所有设备
@@ -99,4 +107,49 @@ public class EquipmentService {
 
         return equipmentRepository.save(equipment);
     }
+
+    public List<EquipmentUsageStat> getUsageStatistics() {
+        List<Equipment> allEquipment = equipmentRepository.findAll();
+        List<EquipmentUsageStat> stats = new ArrayList<>();
+
+        for (Equipment equip : allEquipment) {
+            List<BorrowReturn> records = borrowReturnRepository.findByEquipid(equip.getEquipid());
+
+            int usageCount = 0;
+            double totalHours = 0;
+            int failureCount = 0;
+
+            for (BorrowReturn record : records) {
+                if (record.getEquipstatus() == BorrowReturnStatus.BORROWED || 
+                    record.getEquipstatus() == BorrowReturnStatus.RETURNED) {
+                    usageCount++;
+                    if (record.getBorrowdate() != null && record.getReturndate() != null) {
+                        long durationMs = record.getReturndate().getTime() - record.getBorrowdate().getTime();
+                        totalHours += durationMs / (1000.0 * 60 * 60); // 毫秒转小时
+                    }
+                    else {
+                        long durationMs = System.currentTimeMillis() - record.getBorrowdate().getTime();
+                        totalHours += durationMs / (1000.0 * 60 * 60); // 毫秒转小时
+                    }
+                }
+                // if (record.getEquipstatus() == BorrowReturnStatus.FAULT) {
+                //     failureCount++;
+                // }
+            }
+
+            EquipmentUsageStat stat = new EquipmentUsageStat();
+            stat.setName(equip.getEquipname());
+            stat.setType(equip.getEquipkind());
+            stat.setUsageCount(usageCount);
+            stat.setTotalDurationHours(Math.round(totalHours * 10.0) / 10.0);
+            stat.setAvgDurationHours(usageCount == 0 ? 0 : Math.round((totalHours / usageCount) * 10.0) / 10.0);
+            stat.setFailureCount(failureCount);
+            stat.setStatus(equip.getEquipstatus().toString());
+
+            stats.add(stat);
+        }
+
+        return stats;
+    }
 }
+

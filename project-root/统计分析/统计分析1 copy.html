@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计分析 - 科研设备管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .page-header h1 i {
+            color: #3498db;
+        }
+        
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .filter-panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            grid-column: 1 / -1;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .chart-card h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card h3 {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .trend-up {
+            color: #28a745;
+        }
+        
+        .trend-down {
+            color: #dc3545;
+        }
+        
+        .trend-neutral {
+            color: #6c757d;
+        }
+        
+        .detail-table {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px;
+            background: linear-gradient(to top, rgba(255,255,255,0.9), transparent);
+            color: #3498db;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .scroll-indicator.show {
+            opacity: 1;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span>欢迎，张教授</span>
+            <a href="#">个人中心</a>
+            <a href="#">退出登录</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-chart-pie"></i> 统计分析</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 统计分析
+            </div>
+        </div>
+        
+        <div class="filter-panel">
+            <h2>统计筛选</h2>
+            <form class="filter-form">
+                <div class="form-group">
+                    <label for="time-range">时间范围</label>
+                    <select id="time-range" class="form-control">
+                        <option value="7days">最近7天</option>
+                        <option value="30days" selected>最近30天</option>
+                        <option value="90days">最近90天</option>
+                        <option value="year">本年度</option>
+                        <option value="custom">自定义</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="start-date">开始日期</label>
+                    <input type="date" id="start-date" class="form-control" disabled>
+                </div>
+                
+                <div class="form-group">
+                    <label for="end-date">结束日期</label>
+                    <input type="date" id="end-date" class="form-control" disabled>
+                </div>
+                
+                <div class="form-group">
+                    <label for="device-type">设备类型</label>
+                    <select id="device-type" class="form-control">
+                        <option value="">全部类型</option>
+                        <option value="1">分析仪器</option>
+                        <option value="2">实验设备</option>
+                        <option value="3">测量仪器</option>
+                        <option value="4">计算机设备</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-secondary">重置</button>
+                    <button type="submit" class="btn btn-primary">生成统计</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>设备使用率</h3>
+                <div class="stat-value">78.5%</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> 较上月增长5.2%
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>平均借用时长</h3>
+                <div class="stat-value">3.2天</div>
+                <div class="stat-trend trend-down">
+                    <i class="fas fa-arrow-down"></i> 较上月减少0.8天
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>设备故障率</h3>
+                <div class="stat-value">4.7%</div>
+                <div class="stat-trend trend-neutral">
+                    <i class="fas fa-equals"></i> 与上月持平
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>借用申请数</h3>
+                <div class="stat-value">128</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> 较上月增长12%
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-container">
+            <div class="chart-card">
+                <h2>设备使用频率分布</h2>
+                <canvas id="histogramChart"></canvas>
+            </div>
+            
+            <div class="chart-card">
+                <h2>设备类型占比</h2>
+                <div class="chart-placeholder">
+                    [此处为设备类型饼图]
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-container">
+            <div class="chart-card">
+                <h2>借用时长分析</h2>
+                <div class="chart-placeholder">
+                    [此处为借用时长直方图]
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h2>设备状态分布</h2>
+                <div class="chart-placeholder">
+                    [此处为设备状态环形图]
+                </div>
+            </div>
+        </div>
+        
+        <div class="detail-table">
+            <h2 style="padding: 1rem 1.5rem; background-color: #f8f9fa; border-bottom: 1px solid #eee;">设备使用详情</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>设备名称</th>
+                            <th>使用次数</th>
+                            <th>总使用时长</th>
+                            <th>平均每次使用</th>
+                            <th>故障次数</th>
+                            <th>设备状态</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>高效液相色谱仪</td>
+                            <td>42</td>
+                            <td>126小时</td>
+                            <td>3小时</td>
+                            <td>2</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>紫外可见分光光度计</td>
+                            <td>38</td>
+                            <td>76小时</td>
+                            <td>2小时</td>
+                            <td>1</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>电子天平</td>
+                            <td>65</td>
+                            <td>97.5小时</td>
+                            <td>1.5小时</td>
+                            <td>0</td>
+                            <td>闲置</td>
+                        </tr>
+                        <tr>
+                            <td>离心机</td>
+                            <td>28</td>
+                            <td>56小时</td>
+                            <td>2小时</td>
+                            <td>3</td>
+                            <td>维修中</td>
+                        </tr>
+                        <tr>
+                            <td>PCR仪</td>
+                            <td>34</td>
+                            <td>102小时</td>
+                            <td>3小时</td>
+                            <td>1</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>气相色谱仪</td>
+                            <td>29</td>
+                            <td>116小时</td>
+                            <td>4小时</td>
+                            <td>0</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>原子吸收光谱仪</td>
+                            <td>22</td>
+                            <td>66小时</td>
+                            <td>3小时</td>
+                            <td>1</td>
+                            <td>故障</td>
+                        </tr>
+                        <tr>
+                            <td>傅里叶红外光谱仪</td>
+                            <td>31</td>
+                            <td>93小时</td>
+                            <td>3小时</td>
+                            <td>2</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>质谱仪</td>
+                            <td>19</td>
+                            <td>76小时</td>
+                            <td>4小时</td>
+                            <td>0</td>
+                            <td>闲置</td>
+                        </tr>
+                        <tr>
+                            <td>电化学工作站</td>
+                            <td>47</td>
+                            <td>94小时</td>
+                            <td>2小时</td>
+                            <td>0</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>热分析仪</td>
+                            <td>25</td>
+                            <td>100小时</td>
+                            <td>4小时</td>
+                            <td>1</td>
+                            <td>维修中</td>
+                        </tr>
+                        <tr>
+                            <td>激光共聚焦显微镜</td>
+                            <td>33</td>
+                            <td>99小时</td>
+                            <td>3小时</td>
+                            <td>2</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>扫描电子显微镜</td>
+                            <td>21</td>
+                            <td>84小时</td>
+                            <td>4小时</td>
+                            <td>0</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>透射电子显微镜</td>
+                            <td>18</td>
+                            <td>72小时</td>
+                            <td>4小时</td>
+                            <td>0</td>
+                            <td>正常</td>
+                        </tr>
+                        <tr>
+                            <td>X射线衍射仪</td>
+                            <td>27</td>
+                            <td>108小时</td>
+                            <td>4小时</td>
+                            <td>1</td>
+                            <td>正常</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <!-- <div class="scroll-indicator">滚动查看更多设备数据</div> -->
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 科研设备管理系统</p>
+    </footer>
+
+    <script>
+        // 启用/禁用自定义日期选择
+        document.getElementById('time-range').addEventListener('change', function() {
+            const customSelected = this.value === 'custom';
+            document.getElementById('start-date').disabled = !customSelected;
+            document.getElementById('end-date').disabled = !customSelected;
+        });
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 模拟设备使用次数数据
+        const usageCounts = [38, 38, 65, 28, 34, 29, 22, 31, 19, 47, 25, 33, 21, 18, 27];
+
+        // 统计每个使用次数出现的频率
+        // 思路：先求出最大使用次数，构建区间(比如1-10,11-20...),也可以按具体值统计（这里按具体值统计）
+        
+        // 统计频率（次数 => 设备数量）
+        const frequencyMap = {};
+        usageCounts.forEach(count => {
+            frequencyMap[count] = (frequencyMap[count] || 0) + 1;
+        });
+
+        // 获取横坐标（使用次数）并排序
+        const labels = Object.keys(frequencyMap).map(k => Number(k)).sort((a,b) => a - b);
+
+        // 对应纵坐标（设备数量）
+        const data = labels.map(label => frequencyMap[label]);
+
+        const ctx = document.getElementById('histogramChart').getContext('2d');
+        const histogramChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+            labels: labels,
+            datasets: [{
+                label: '设备数量',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                barPercentage: 0.8,
+                categoryPercentage: 0.9
+            }]
+            },
+            options: {
+            scales: {
+                x: {
+                title: {
+                    display: true,
+                    text: '使用次数'
+                }
+                },
+                y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: '设备数量'
+                },
+                ticks: {
+                    stepSize: 1,
+                    precision: 0
+                }
+                }
+            },
+            plugins: {
+                legend: {
+                display: false
+                },
+                tooltip: {
+                enabled: true
+                }
+            }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.seproject.demo.controller;
 
 import com.seproject.demo.entity.Equipment;
 import com.seproject.demo.entity.EquipmentStatus;
+import com.seproject.demo.entity.EquipmentUsageStat;
 import com.seproject.demo.entity.User;
 import com.seproject.demo.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,4 +98,10 @@ public class EquipmentController {
         Equipment updatedEquipment = equipmentService.updateEquipment(equipId, equipment);
         return ResponseEntity.ok(updatedEquipment);
     }
+
+    @GetMapping("/usage-stats")
+    public List<EquipmentUsageStat> getUsageStats() {
+        return equipmentService.getUsageStatistics();
+    }
+
 }
