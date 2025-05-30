@@ -5,13 +5,18 @@ import com.seproject.demo.entity.BorrowReturnStatus;
 import com.seproject.demo.entity.Equipment;
 import com.seproject.demo.entity.EquipmentStatus;
 import com.seproject.demo.entity.EquipmentUsageStat;
+import com.seproject.demo.entity.MaintainScrap;
 import com.seproject.demo.repository.BorrowReturnRepository;
 import com.seproject.demo.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.ZoneId;
+// import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import java.util.List;
@@ -21,12 +26,15 @@ public class EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
     private final BorrowReturnRepository borrowReturnRepository;
+    private final MaintainScrapService maintainScrapService;
 
     @Autowired
     public EquipmentService(EquipmentRepository equipmentRepository, 
-                            BorrowReturnRepository borrowReturnRepository) {
+                            BorrowReturnRepository borrowReturnRepository,
+                             MaintainScrapService maintainScrapService) {
         this.equipmentRepository = equipmentRepository;
         this.borrowReturnRepository = borrowReturnRepository;
+        this.maintainScrapService = maintainScrapService;
     }
 
     // 查询所有设备
@@ -108,34 +116,50 @@ public class EquipmentService {
         return equipmentRepository.save(equipment);
     }
 
-    public List<EquipmentUsageStat> getUsageStatistics() {
+    public List<EquipmentUsageStat> getUsageStatistics(LocalDate startDate, String deviceType) {
         List<Equipment> allEquipment = equipmentRepository.findAll();
         List<EquipmentUsageStat> stats = new ArrayList<>();
 
         for (Equipment equip : allEquipment) {
+
+            // 如果传入了设备类型参数，则进行过滤
+            if (deviceType != null && !deviceType.isEmpty() && !deviceType.equals(equip.getEquipkind())) {
+                continue;
+            }
+
             List<BorrowReturn> records = borrowReturnRepository.findByEquipid(equip.getEquipid());
+            List<MaintainScrap> maintainScraps = maintainScrapService.findByEquipid(equip.getEquipid());
 
             int usageCount = 0;
             double totalHours = 0;
             int failureCount = 0;
 
             for (BorrowReturn record : records) {
-                if (record.getEquipstatus() == BorrowReturnStatus.BORROWED || 
+                // 如果 borrowDate 是 null，则跳过该条记录
+                if (record.getBorrowdate() == null) {
+                    continue;
+                }
+
+                // 如果 borrowDate 在 startDate 之前，则跳过
+                if (record.getBorrowdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(startDate)) {
+                    continue;
+                }
+
+                if (record.getEquipstatus() == BorrowReturnStatus.BORROWED ||
                     record.getEquipstatus() == BorrowReturnStatus.RETURNED) {
                     usageCount++;
-                    if (record.getBorrowdate() != null && record.getReturndate() != null) {
+                    if (record.getReturndate() != null) {
                         long durationMs = record.getReturndate().getTime() - record.getBorrowdate().getTime();
-                        totalHours += durationMs / (1000.0 * 60 * 60); // 毫秒转小时
-                    }
-                    else {
+                        totalHours += durationMs / (1000.0 * 60 * 60);
+                    } else {
                         long durationMs = System.currentTimeMillis() - record.getBorrowdate().getTime();
-                        totalHours += durationMs / (1000.0 * 60 * 60); // 毫秒转小时
+                        totalHours += durationMs / (1000.0 * 60 * 60);
                     }
                 }
-                // if (record.getEquipstatus() == BorrowReturnStatus.FAULT) {
-                //     failureCount++;
-                // }
+
             }
+
+            failureCount += maintainScraps.size();
 
             EquipmentUsageStat stat = new EquipmentUsageStat();
             stat.setName(equip.getEquipname());
@@ -151,5 +175,7 @@ public class EquipmentService {
 
         return stats;
     }
+
+
 }
 

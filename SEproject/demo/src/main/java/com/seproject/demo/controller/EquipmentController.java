@@ -6,9 +6,11 @@ import com.seproject.demo.entity.EquipmentUsageStat;
 import com.seproject.demo.entity.User;
 import com.seproject.demo.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 import java.util.List;
@@ -100,8 +102,14 @@ public class EquipmentController {
     }
 
     @GetMapping("/usage-stats")
-    public List<EquipmentUsageStat> getUsageStats() {
-        return equipmentService.getUsageStatistics();
+    public List<EquipmentUsageStat> getUsageStats(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "deviceType", required = false) String deviceType
+    ) {
+        
+        return equipmentService.getUsageStatistics(startDate, deviceType);
     }
+
+
 
 }
