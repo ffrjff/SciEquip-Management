@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备管理 - 科研设备管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .device-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-in_use {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-maintenance {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-scrapped {
+            background-color: #f0f0f0;
+            color: #666;
+            text-decoration: line-through;
+        }
+
+        .status-pending {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+        }
+
+        .pagination a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+        }
+
+        .pagination a.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+
+        .pagination a.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .message-box {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+
+        .refresh-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .refresh-btn:hover {
+            background-color: #27ae60;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            color: #2c3e50;
+            font-size: 1.25rem;
+        }
+
+        .close-btn {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span id="username-display">欢迎，</span>
+            <a href="../个人中心/个人中心1.html">个人中心</a>
+            <a href="../login2.html">退出登录</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-microscope"></i> 设备管理</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 设备管理
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="device-list">编辑设备</div>
+            <div class="tab" data-tab="add-device">添加设备</div>
+            <div class="tab" data-tab="lend-device">借出设备</div>
+        </div>
+
+        <!-- 设备列表标签页 -->
+        <div id="device-list" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 设备查询</h2>
+                <form id="searchForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="search-device-name">设备名称</label>
+                            <input type="text" id="search-device-name" name="name" class="form-control"
+                                placeholder="输入设备名称">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="search-device-type">设备类型</label>
+                            <select id="search-device-type" name="type" class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="1">分析仪器</option>
+                                <option value="2">实验设备</option>
+                                <option value="3">测量仪器</option>
+                                <option value="4">计算机设备</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="search-device-status">设备状态</label>
+                            <select id="search-device-status" name="status" class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="AVAILABLE">可用</option>
+                                <option value="IN_USE">使用中</option>
+                                <option value="MAINTENANCE">维修中</option>
+                                <option value="PENDING">待审核</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 设备列表</h2>
+                <div class="results-header">
+                    <div class="results-count" id="resultsCount">正在加载数据...</div>
+                    <button id="refreshBtn" class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> 刷新
+                    </button>
+                </div>
+
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>设备编号</th>
+                            <th>设备名称</th>
+                            <th>设备类型</th>
+                            <th>规格型号</th>
+                            <th>购置日期</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="device-table-body">
+                        <tr>
+                            <td colspan="7">正在加载设备数据...</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="pagination">
+                    <a href="#" id="prevPage">&laquo;</a>
+                    <div id="pageNumbers"></div>
+                    <a href="#" id="nextPage">&raquo;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 添加设备标签页 -->
+        <div id="add-device" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> 添加新设备</h2>
+                <form id="addEquipmentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="device-name">设备名称</label>
+                            <input type="text" id="device-name" class="form-control" placeholder="输入设备名称" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="device-type">设备类型</label>
+                            <select id="device-type" class="form-control" required>
+                                <option value="">请选择设备类型</option>
+                                <option value="1">分析仪器</option>
+                                <option value="2">实验设备</option>
+                                <option value="3">测量仪器</option>
+                                <option value="4">计算机设备</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="device-model">规格型号</label>
+                            <input type="text" id="device-model" class="form-control" placeholder="输入设备规格型号" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="purchase-date">购置日期</label>
+                            <input type="date" id="purchase-date" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="device-num">设备编号</label>
+                            <input type="text" id="device-num" class="form-control" placeholder="输入设备编号" required>
+                        </div>
+                    </div>
+
+                    <!-- <div class="form-group">
+                        <label for="device-description">设备描述</label>
+                        <textarea id="device-description" class="form-control" placeholder="输入设备描述信息..."></textarea>
+                    </div> -->
+
+                    <div id="add-equipment-message" class="message-box" style="display: none;"></div>
+                    <div id="add-equipment-message" class="message-box" style="display: none;"></div>
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-success">保存设备</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 借出设备标签页 -->
+        <div id="lend-device" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-exchange-alt"></i> 借出设备管理</h2>
+                <div class="results-header">
+                    <div class="results-count" id="lendResultsCount">正在加载数据...</div>
+                    <button id="refreshLendBtn" class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> 刷新
+                    </button>
+                </div>
+
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>设备编号</th>
+                            <th>设备名称</th>
+                            <th>设备类型</th>
+                            <th>规格型号</th>
+                            <th>申请人</th>
+                            <th>申请时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lend-device-table-body">
+                        <tr>
+                            <td colspan="7">正在加载设备数据...</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="lendPagination">
+                    <a href="#" id="lendPrevPage">&laquo;</a>
+                    <div id="lendPageNumbers"></div>
+                    <a href="#" id="lendNextPage">&raquo;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑设备模态框 -->
+    <div id="editDeviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-edit"></i> 编辑设备信息</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+
+            <form id="editEquipmentForm">
+                <input type="hidden" id="edit-equipid">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-equipnum">设备编号</label>
+                        <input type="text" id="edit-equipnum" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-equipname">设备名称</label>
+                        <input type="text" id="edit-equipname" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-equipkind">设备类型</label>
+                        <select id="edit-equipkind" class="form-control" required>
+                            <option value="1">分析仪器</option>
+                            <option value="2">实验设备</option>
+                            <option value="3">测量仪器</option>
+                            <option value="4">计算机设备</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-equipmodel">规格型号</label>
+                        <input type="text" id="edit-equipmodel" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-equipdate">购置日期</label>
+                        <input type="date" id="edit-equipdate" class="form-control" required>
+                    </div>
+                </div>
+
+                <div id="edit-equipment-message" class="message-box" style="display: none;"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存更改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 科研设备管理系统</p>
+    </footer>
+
+    <script>
+        // 分页相关变量
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let allEquipmentData = [];
+        let filteredEquipmentData = [];
+        let currentCompany = '';
+
+        // 全局变量
+        let currentUser = {
+            id: localStorage.getItem("userid"),
+            name: localStorage.getItem("username")
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const userid = localStorage.getItem("userid");
+            if (!userid) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // 显示用户名
+            if (currentUser.name) {
+                document.getElementById('username-display').textContent = `欢迎，${currentUser.name}`;
+            }
+
+            currentCompany = userid;
+            initTabs();  // 这个现在会处理URL参数
+            fetchAllEquipment();
+
+            // 其他事件监听器保持不变...
+            document.getElementById('searchForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                currentPage = 1;
+                filterEquipment();
+            });
+
+            document.getElementById('searchForm').addEventListener('reset', function () {
+                currentPage = 1;
+                setTimeout(() => filterEquipment(), 0);
+            });
+
+            document.getElementById('refreshBtn').addEventListener('click', function () {
+                fetchAllEquipment();
+            });
+
+            document.getElementById('addEquipmentForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                addEquipment();
+            });
+
+            document.getElementById('editEquipmentForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                updateEquipment();
+            });
+        });
+
+        // 初始化标签页（包含URL参数处理）
+        function initTabs() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+
+            // 默认激活第一个标签页
+            let activeTab = 'device-list';
+
+            // 检查URL参数
+            if (tabParam && document.querySelector(`.tab[data-tab="${tabParam}"]`)) {
+                activeTab = tabParam;
+            }
+
+            // 移除所有标签和内容的active类
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            // 激活对应的标签和内容
+            document.querySelector(`.tab[data-tab="${activeTab}"]`).classList.add('active');
+            document.getElementById(activeTab).classList.add('active');
+
+            // 如果激活的是借出设备标签页，加载数据
+            if (activeTab === 'lend-device') {
+                fetchPendingRequests();
+            }
+
+            // 添加点击事件监听
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有标签和内容的active类
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                    // 为当前点击的标签和对应内容添加active类
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+
+                    // 更新URL参数但不刷新页面
+                    const newUrl = window.location.pathname + `?tab=${tabId}`;
+                    window.history.pushState(null, '', newUrl);
+
+                    // 如果切换到借出设备标签页，加载数据
+                    if (tabId === 'lend-device') {
+                        fetchPendingRequests();
+                    }
+                });
+            });
+        }
+
+        // 获取所有设备数据
+        function fetchAllEquipment() {
+            const tbody = document.getElementById('device-table-body');
+            tbody.innerHTML = '<tr><td colspan="7">正在加载设备数据...</td></tr>';
+
+            fetch(`http://localhost:8080/api/equipment/search?company=${currentCompany}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应不正常');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 过滤掉已报废的设备
+                    allEquipmentData = data.filter(equip => equip.equipstatus !== 'SCRAPPED');
+                    filterEquipment();
+                })
+                .catch(error => {
+                    console.error('获取设备失败:', error);
+                    tbody.innerHTML = '<tr><td colspan="7">加载设备数据失败，请刷新重试</td></tr>';
+                    document.getElementById('resultsCount').textContent = '数据加载失败';
+                });
+        }
+
+        // 筛选设备数据
+        function filterEquipment() {
+            const formData = new FormData(document.getElementById('searchForm'));
+            const name = formData.get('name') || '';
+            const type = formData.get('type') || '';
+            const status = formData.get('status') || '';
+
+            filteredEquipmentData = allEquipmentData.filter(equipment => {
+                // 应用搜索条件
+                const nameMatch = equipment.equipname.toLowerCase().includes(name.toLowerCase());
+                const typeMatch = !type || equipment.equipkind === type;
+                const statusMatch = !status || equipment.equipstatus === status;
+
+                return nameMatch && typeMatch && statusMatch;
+            });
+
+            renderEquipmentTable();
+            renderPagination();
+        }
+
+        // 渲染设备表格
+        function renderEquipmentTable() {
+            const tbody = document.getElementById('device-table-body');
+            tbody.innerHTML = '';
+
+            if (!filteredEquipmentData || filteredEquipmentData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7">暂无设备数据</td></tr>';
+                document.getElementById('resultsCount').textContent = '共找到 0 条记录';
+                return;
+            }
+
+            // 计算当前页的数据
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, filteredEquipmentData.length);
+            const currentPageData = filteredEquipmentData.slice(startIndex, endIndex);
+
+            // 更新记录数
+            document.getElementById('resultsCount').textContent = `共找到 ${filteredEquipmentData.length} 条记录`;
+
+            // 设备类型映射
+            const equipmentTypeMap = {
+                '1': '分析仪器',
+                '2': '实验设备',
+                '3': '测量仪器',
+                '4': '计算机设备'
+            };
+
+            // 设备状态映射
+            const equipmentStatusMap = {
+                'AVAILABLE': { text: '可用', class: 'status-available' },
+                'IN_USE': { text: '使用中', class: 'status-in_use' },
+                'MAINTENANCE': { text: '维护中', class: 'status-maintenance' },
+                'PENDING': { text: '待审核', class: 'status-pending' },
+            };
+
+            currentPageData.forEach(equipment => {
+                const row = document.createElement('tr');
+
+                // 格式化日期
+                const purchaseDate = new Date(equipment.equipdate);
+                const formattedDate = purchaseDate.toLocaleDateString('zh-CN');
+
+                // 获取状态信息
+                const statusInfo = equipmentStatusMap[equipment.equipstatus] ||
+                    { text: equipment.equipstatus, class: '' };
+
+                // 根据状态决定显示哪些按钮
+                let actionButtons = '';
+                if (equipment.equipstatus === 'MAINTENANCE') {
+                    // actionButtons = `
+                    //     <button class="btn-sm btn-success" onclick="completeMaintenance(${equipment.equipid})">完成维护</button>
+                    //     <button class="btn-sm btn-danger" onclick="scrapEquipment(${equipment.equipid})">报废</button>
+                    // `;
+                } else if (equipment.equipstatus === 'IN_USE') {
+                    // actionButtons = `
+                    //     <button class="btn-sm btn-danger" onclick="scrapEquipment(${equipment.equipid})">报废</button>
+                    // `;
+                } else {
+                    // actionButtons = `
+                    //     <button class="btn-sm btn-warning" onclick="startMaintenance(${equipment.equipid})">维护</button>
+                    //     <button class="btn-sm btn-danger" onclick="scrapEquipment(${equipment.equipid})">报废</button>
+                    // `;
+                }
+
+                // 添加编辑按钮
+                actionButtons += `
+                    <button class="btn-sm btn-primary" onclick="openEditModal(${equipment.equipid})">编辑</button>
+                `;
+
+                row.innerHTML = `
+                    <td>${equipment.equipnum}</td>
+                    <td>${equipment.equipname}</td>
+                    <td>${equipmentTypeMap[equipment.equipkind] || equipment.equipkind}</td>
+                    <td>${equipment.equipmodel}</td>
+                    <td>${formattedDate}</td>
+                    <td><span class="status ${statusInfo.class}">${statusInfo.text}</span></td>
+                    <td>${actionButtons}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 渲染分页控件
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredEquipmentData.length / itemsPerPage);
+
+            // 上一页按钮
+            const prevLink = document.createElement('a');
+            prevLink.href = '#';
+            prevLink.innerHTML = '&laquo;';
+            prevLink.id = 'prevPage';
+            if (currentPage === 1) {
+                prevLink.classList.add('disabled');
+            } else {
+                prevLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentPage--;
+                    renderEquipmentTable();
+                    renderPagination();
+                });
+            }
+            pagination.appendChild(prevLink);
+
+            // 页码按钮
+            const pageNumbersContainer = document.createElement('div');
+            pageNumbersContainer.id = 'pageNumbers';
+
+            // 最多显示5个页码
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            // 调整页码范围，确保显示5个页码
+            if (currentPage <= 3) {
+                endPage = Math.min(5, totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                startPage = Math.max(totalPages - 4, 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLink = document.createElement('a');
+                pageLink.href = '#';
+                pageLink.textContent = i;
+                if (i === currentPage) {
+                    pageLink.classList.add('active');
+                }
+                pageLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderEquipmentTable();
+                    renderPagination();
+                });
+                pageNumbersContainer.appendChild(pageLink);
+            }
+
+            pagination.appendChild(pageNumbersContainer);
+
+            // 下一页按钮
+            const nextLink = document.createElement('a');
+            nextLink.href = '#';
+            nextLink.innerHTML = '&raquo;';
+            nextLink.id = 'nextPage';
+            if (currentPage === totalPages || totalPages === 0) {
+                nextLink.classList.add('disabled');
+            } else {
+                nextLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentPage++;
+                    renderEquipmentTable();
+                    renderPagination();
+                });
+            }
+            pagination.appendChild(nextLink);
+        }
+
+        // 打开编辑模态框
+        function openEditModal(equipId) {
+            fetch(`http://localhost:8080/api/equipment/${equipId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('获取设备详情失败');
+                    }
+                    return response.json();
+                })
+                .then(equipment => {
+                    document.getElementById('edit-equipid').value = equipment.equipid;
+                    document.getElementById('edit-equipnum').value = equipment.equipnum;
+                    document.getElementById('edit-equipname').value = equipment.equipname;
+                    document.getElementById('edit-equipkind').value = equipment.equipkind;
+                    document.getElementById('edit-equipmodel').value = equipment.equipmodel;
+
+                    const date = new Date(equipment.equipdate);
+                    const formattedDate = date.toISOString().split('T')[0];
+                    document.getElementById('edit-equipdate').value = formattedDate;
+
+                    document.getElementById('editDeviceModal').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('获取设备详情失败:', error);
+                    showEditMessage('获取设备详情失败', 'error');
+                });
+        }
+
+        // 关闭编辑模态框
+        function closeEditModal() {
+            document.getElementById('editDeviceModal').style.display = 'none';
+        }
+
+        // 开始维护
+        function startMaintenance(equipId) {
+            updateEquipmentStatus(equipId, 'MAINTENANCE');
+        }
+
+        // 完成维护
+        function completeMaintenance(equipId) {
+            updateEquipmentStatus(equipId, 'AVAILABLE');
+        }
+
+        // 报废设备
+        function scrapEquipment(equipId) {
+            if (confirm('确定要报废此设备吗？此操作不可撤销！')) {
+                updateEquipmentStatus(equipId, 'SCRAPPED');
+            }
+        }
+
+        // 更新设备状态
+        function updateEquipmentStatus(equipId, status) {
+            fetch(`http://localhost:8080/api/equipment/${equipId}/status?status=${status}`, {
+                method: 'PUT'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('更新状态失败');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    // 从本地数据中移除报废的设备或更新状态
+                    if (status === 'SCRAPPED') {
+                        allEquipmentData = allEquipmentData.filter(equip => equip.equipid !== equipId);
+                    } else {
+                        const index = allEquipmentData.findIndex(equip => equip.equipid === equipId);
+                        if (index !== -1) {
+                            allEquipmentData[index].equipstatus = status;
+                        }
+                    }
+
+                    filterEquipment();
+                    alert('操作成功');
+                })
+                .catch(error => {
+                    console.error('更新状态失败:', error);
+                    alert('操作失败，请重试');
+                });
+        }
+
+        // 更新设备信息
+        function updateEquipment() {
+            const equipId = document.getElementById('edit-equipid').value;
+            const formData = {
+                equipnum: document.getElementById('edit-equipnum').value.trim(),
+                equipname: document.getElementById('edit-equipname').value.trim(),
+                equipkind: document.getElementById('edit-equipkind').value,
+                equipmodel: document.getElementById('edit-equipmodel').value.trim(),
+                equipdate: document.getElementById('edit-equipdate').value
+            };
+
+            // 验证必填字段
+            if (!formData.equipname || !formData.equipkind || !formData.equipmodel || !formData.equipnum) {
+                showEditMessage('请填写所有必填字段', 'error');
+                return;
+            }
+
+            fetch(`http://localhost:8080/api/equipment/${equipId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('更新失败');
+                    }
+                    return response.json();
+                })
+                .then(updatedEquipment => {
+                    // 更新本地数据
+                    const index = allEquipmentData.findIndex(equip => equip.equipid == equipId);
+                    if (index !== -1) {
+                        allEquipmentData[index] = updatedEquipment;
+                    }
+
+                    showEditMessage('设备更新成功', 'success');
+                    setTimeout(() => {
+                        closeEditModal();
+                        filterEquipment();
+                    }, 1000);
+                })
+                .catch(error => {
+                    console.error('更新设备失败:', error);
+                    showEditMessage('更新设备失败: ' + error.message, 'error');
+                });
+        }
+
+        // 添加设备
+        function addEquipment() {
+            // 收集表单数据
+            const formData = {
+                equipnum: document.getElementById('device-num').value.trim(),
+                equipname: document.getElementById('device-name').value.trim(),
+                equipkind: document.getElementById('device-type').value,
+                equipmodel: document.getElementById('device-model').value.trim(),
+                equipdate: document.getElementById('purchase-date').value,
+                company: currentCompany,
+                equipstatus: "AVAILABLE",
+            };
+
+            // 验证必填字段
+            if (!formData.equipname || !formData.equipkind || !formData.equipmodel || !formData.equipnum) {
+                showMessage('请填写所有必填字段', 'error');
+                return;
+            }
+
+            fetch('http://localhost:8080/api/equipment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                    return response.text(); // 使用 text() 而不是 json()
+                })
+                .then(message => {
+                    // 假设服务器返回的是 "成功添加！"
+                    showMessage(message, 'success');
+                    document.getElementById('addEquipmentForm').reset();
+                })
+                .catch(error => {
+                    console.error('添加设备失败:', error);
+                    showMessage('添加设备失败: ' + error.message, 'error');
+                });
+        }
+
+        // 显示操作消息
+        function showMessage(text, type) {
+            const messageBox = document.getElementById('add-equipment-message');
+            messageBox.textContent = text;
+            messageBox.className = `message-box alert-${type}`;
+            messageBox.style.display = 'block';
+
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        // 显示编辑操作消息
+        function showEditMessage(text, type) {
+            const messageBox = document.getElementById('edit-equipment-message');
+            messageBox.textContent = text;
+            messageBox.className = `message-box alert-${type}`;
+            messageBox.style.display = 'block';
+
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        // 点击模态框外部关闭模态框
+        window.onclick = function (event) {
+            const modal = document.getElementById('editDeviceModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        };
+
+
+
+
+
+
+        // 借出设备分页相关变量
+        let lendCurrentPage = 1;
+        const lendItemsPerPage = 5;
+        let allPendingRequests = [];
+
+        // 在DOMContentLoaded事件中添加
+        document.getElementById('refreshLendBtn').addEventListener('click', fetchPendingRequests);
+
+        // 获取待审批的借用请求
+        function fetchPendingRequests() {
+            const tbody = document.getElementById('lend-device-table-body');
+            tbody.innerHTML = '<tr><td colspan="7">正在加载数据...</td></tr>';
+
+            fetch(`http://localhost:8080/api/borrow-return/pending-requests?company=${currentCompany}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应不正常');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    allPendingRequests = data;
+                    renderLendDeviceTable();
+                    renderLendPagination();
+                })
+                .catch(error => {
+                    console.error('获取待审批请求失败:', error);
+                    tbody.innerHTML = '<tr><td colspan="7">加载数据失败，请刷新重试</td></tr>';
+                    document.getElementById('lendResultsCount').textContent = '数据加载失败';
+                });
+        }
+
+        // 渲染借出设备表格
+        function renderLendDeviceTable() {
+            const tbody = document.getElementById('lend-device-table-body');
+            tbody.innerHTML = '';
+
+            if (!allPendingRequests || allPendingRequests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7">暂无待审批的借用请求</td></tr>';
+                document.getElementById('lendResultsCount').textContent = '共找到 0 条记录';
+                return;
+            }
+
+            // 计算当前页的数据
+            const startIndex = (lendCurrentPage - 1) * lendItemsPerPage;
+            const endIndex = Math.min(startIndex + lendItemsPerPage, allPendingRequests.length);
+            const currentPageData = allPendingRequests.slice(startIndex, endIndex);
+
+            // 更新记录数
+            document.getElementById('lendResultsCount').textContent = `共找到 ${allPendingRequests.length} 条记录`;
+
+            // 设备类型映射
+            const equipmentTypeMap = {
+                '1': '分析仪器',
+                '2': '实验设备',
+                '3': '测量仪器',
+                '4': '计算机设备'
+            };
+
+            currentPageData.forEach(request => {
+                // 获取设备详情
+                fetch(`http://localhost:8080/api/equipment/${request.equipid}`)
+                    .then(response => response.json())
+                    .then(equipment => {
+                        const row = document.createElement('tr');
+
+                        // 格式化日期
+                        const requestDate = new Date(request.borrowdate);
+                        const formattedDate = requestDate.toLocaleDateString('zh-CN') + ' ' + requestDate.toLocaleTimeString('zh-CN');
+
+                        row.innerHTML = `
+                    <td>${equipment.equipnum}</td>
+                    <td>${equipment.equipname}</td>
+                    <td>${equipmentTypeMap[equipment.equipkind] || equipment.equipkind}</td>
+                    <td>${equipment.equipmodel}</td>
+                    <td>用户 ${request.userid}</td>
+                    <td>${formattedDate}</td>
+                    <td>
+                        <button class="btn-sm btn-success" onclick="approveRequest(${request.id})">同意</button>
+                        <button class="btn-sm btn-danger" onclick="rejectRequest(${request.id})">拒绝</button>
+                    </td>
+                `;
+                        tbody.appendChild(row);
+                    })
+                    .catch(error => {
+                        console.error('获取设备详情失败:', error);
+                    });
+            });
+        }
+
+        // 渲染借出设备分页控件
+        function renderLendPagination() {
+            const pagination = document.getElementById('lendPagination');
+            pagination.innerHTML = '';
+
+            const totalPages = Math.ceil(allPendingRequests.length / lendItemsPerPage);
+
+            // 上一页按钮
+            const prevLink = document.createElement('a');
+            prevLink.href = '#';
+            prevLink.innerHTML = '&laquo;';
+            prevLink.id = 'lendPrevPage';
+            if (lendCurrentPage === 1) {
+                prevLink.classList.add('disabled');
+            } else {
+                prevLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    lendCurrentPage--;
+                    renderLendDeviceTable();
+                    renderLendPagination();
+                });
+            }
+            pagination.appendChild(prevLink);
+
+            // 页码按钮
+            const pageNumbersContainer = document.createElement('div');
+            pageNumbersContainer.id = 'lendPageNumbers';
+
+            // 最多显示5个页码
+            let startPage = Math.max(1, lendCurrentPage - 2);
+            let endPage = Math.min(totalPages, lendCurrentPage + 2);
+
+            // 调整页码范围，确保显示5个页码
+            if (lendCurrentPage <= 3) {
+                endPage = Math.min(5, totalPages);
+            } else if (lendCurrentPage >= totalPages - 2) {
+                startPage = Math.max(totalPages - 4, 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLink = document.createElement('a');
+                pageLink.href = '#';
+                pageLink.textContent = i;
+                if (i === lendCurrentPage) {
+                    pageLink.classList.add('active');
+                }
+                pageLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    lendCurrentPage = i;
+                    renderLendDeviceTable();
+                    renderLendPagination();
+                });
+                pageNumbersContainer.appendChild(pageLink);
+            }
+
+            pagination.appendChild(pageNumbersContainer);
+
+            // 下一页按钮
+            const nextLink = document.createElement('a');
+            nextLink.href = '#';
+            nextLink.innerHTML = '&raquo;';
+            nextLink.id = 'lendNextPage';
+            if (lendCurrentPage === totalPages || totalPages === 0) {
+                nextLink.classList.add('disabled');
+            } else {
+                nextLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    lendCurrentPage++;
+                    renderLendDeviceTable();
+                    renderLendPagination();
+                });
+            }
+            pagination.appendChild(nextLink);
+        }
+
+        // 同意借用请求
+        function approveRequest(recordId) {
+            fetch(`http://localhost:8080/api/borrow-return/approve/${recordId}`, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('操作失败');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    alert('已同意借用请求');
+                    fetchPendingRequests();
+                })
+                .catch(error => {
+                    console.error('同意请求失败:', error);
+                    alert('操作失败，请重试');
+                });
+        }
+
+        // 拒绝借用请求
+        function rejectRequest(recordId) {
+            fetch(`http://localhost:8080/api/borrow-return/reject/${recordId}`, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('操作失败');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    alert('已拒绝借用请求');
+                    fetchPendingRequests();
+                })
+                .catch(error => {
+                    console.error('拒绝请求失败:', error);
+                    alert('操作失败，请重试');
+                });
+        }
+
+    </script>
+</body>
+
+</html>

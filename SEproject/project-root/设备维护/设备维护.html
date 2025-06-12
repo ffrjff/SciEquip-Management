@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备维护 - 科研设备管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .page-header h1 i {
+            color: #3498db;
+        }
+
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .device-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .device-list th,
+        .device-list td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .device-list th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .device-list tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-maintenance {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-broken {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-scrapped {
+            background-color: #d6d8d9;
+            color: #1b1e21;
+        }
+
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+            margin-right: 0.5rem;
+        }
+
+        .action-btn.btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .action-btn.btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .action-btn.btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .action-btn.btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .action-btn.btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .action-btn.btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .action-btn.btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .action-btn.btn-success:hover {
+            background-color: #218838;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem 0;
+        }
+
+        .pagination a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+        }
+
+        .pagination a.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 600px;
+            max-width: 90%;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            color: #2c3e50;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .maintenance-progress {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #3498db;
+            width: 60%;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span id="username-display">欢迎，</span>
+            <a href="../个人中心/个人中心1.html">个人中心</a>
+            <a href="../login2.html" onclick="logout()">退出登录</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-tools"></i> 设备维护</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 设备维护
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="repair">维修管理</div>
+            <div class="tab" data-tab="scrap">报废管理</div>
+            <div class="tab" data-tab="records">维护报废记录</div>
+        </div>
+
+        <!-- 维修管理标签页 -->
+        <div id="repair" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 维修设备查询</h2>
+                <form id="repair-search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="repair-device-name">设备名称</label>
+                            <input type="text" id="repair-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="repair-device-type">设备类型</label>
+                            <select id="repair-device-type" class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="分析仪器">分析仪器</option>
+                                <option value="实验设备">实验设备</option>
+                                <option value="测量仪器">测量仪器</option>
+                                <option value="计算机设备">计算机设备</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="repair-status">设备状态</label>
+                            <select id="repair-status" class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="AVAILABLE">可用</option>
+                                <option value="MAINTENANCE">维修中</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 维修设备列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>设备编号</th>
+                            <th>设备名称</th>
+                            <th>设备类型</th>
+                            <th>购置日期</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="repair-device-list">
+                        <!-- 动态填充 -->
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="repair-pagination">
+                    <!-- 动态填充 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 报废管理标签页 -->
+        <div id="scrap" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 报废设备查询</h2>
+                <form id="scrap-search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="scrap-device-name">设备名称</label>
+                            <input type="text" id="scrap-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="scrap-device-type">设备类型</label>
+                            <select id="scrap-device-type" class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="分析仪器">分析仪器</option>
+                                <option value="实验设备">实验设备</option>
+                                <option value="测量仪器">测量仪器</option>
+                                <option value="计算机设备">计算机设备</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-list"></i> 可报废设备列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>设备编号</th>
+                            <th>设备名称</th>
+                            <th>设备类型</th>
+                            <th>购置日期</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scrap-device-list">
+                        <!-- 动态填充 -->
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="scrap-pagination">
+                    <!-- 动态填充 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 维护记录标签页 -->
+        <div id="records" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-search"></i> 维护记录查询</h2>
+                <form id="record-search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="record-device-name">设备名称</label>
+                            <input type="text" id="record-device-name" class="form-control" placeholder="输入设备名称">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="record-type">记录类型</label>
+                            <select id="record-type" class="form-control">
+                                <option value="">全部记录</option>
+                                <option value="0">维修记录</option>
+                                <option value="1">报废记录</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="record-date">日期范围</label>
+                            <input type="date" id="record-date" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">重置</button>
+                        <button type="submit" class="btn btn-primary">查询</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-history"></i> 维护记录列表</h2>
+                <table class="device-list">
+                    <thead>
+                        <tr>
+                            <th>记录ID</th>
+                            <th>设备名称</th>
+                            <th>记录类型</th>
+                            <th>操作日期</th>
+                            <th>设备状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="record-list">
+                        <!-- 动态填充 -->
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="record-pagination">
+                    <!-- 动态填充 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 维修详情模态框 -->
+    <div id="repairDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-tools"></i> 维修详情</h3>
+                <button class="close-btn" onclick="closeModal('repairDetailModal')">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label>维修单号</label>
+                <div class="form-control" style="background-color: #f8f9fa;" id="modal-repair-id"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>设备名称</label>
+                    <div class="form-control" style="background-color: #f8f9fa;" id="modal-equip-name"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>设备编号</label>
+                    <div class="form-control" style="background-color: #f8f9fa;" id="modal-equip-num"></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>故障类型</label>
+                    <div class="form-control" style="background-color: #f8f9fa;" id="modal-fault-type"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>提交日期</label>
+                    <div class="form-control" style="background-color: #f8f9fa;" id="modal-submit-date"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>故障描述</label>
+                <div class="form-control" style="background-color: #f8f9fa; min-height: 80px;" id="modal-fault-desc">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="repair-note">维修记录</label>
+                <textarea id="repair-note" class="form-control" placeholder="请输入维修进展和记录..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="repair-parts">更换零件</label>
+                <input type="text" id="repair-parts" class="form-control" placeholder="输入更换的零件名称和数量">
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('repairDetailModal')">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="saveRepairRecord()">保存记录</button>
+                <button type="button" class="btn btn-success" onclick="completeRepair()">完成维修</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 科研设备管理系统</p>
+    </footer>
+
+    <script>
+        // 全局变量
+        // let currentUser = null;
+        // 全局变量
+        let currentUser = {
+            id: localStorage.getItem("userid"),
+            name: localStorage.getItem("username")
+        };
+        let currentPage = {
+            repair: 1,
+            scrap: 1,
+            records: 1
+        };
+        const itemsPerPage = 5;
+        let currentTab = 'repair';
+        let allEquipment = [];
+        let filteredEquipment = [];
+        let allRecords = [];
+        let filteredRecords = [];
+        let currentRepairId = null;
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', async () => {
+            checkLoginStatus();
+            // await loadUserInfo();
+            await loadEquipment();
+            await loadRecords();
+            setupEventListeners();
+            renderEquipmentTable();
+            renderRecordsTable();
+
+            // 显示用户名
+            if (currentUser.name) {
+                document.getElementById('username-display').textContent = `欢迎，${currentUser.name}`;
+            }
+        });
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const userid = localStorage.getItem("userid");
+            if (!userid) {
+                window.location.href = "login.html";
+                return;
+            }
+        }
+
+        // 加载用户信息
+        async function loadUserInfo() {
+            const userid = localStorage.getItem("userid");
+            try {
+                document.getElementById('username-display').textContent = `欢迎，${userid}`;
+            } catch (error) {
+                console.error('加载用户信息失败:', error);
+            }
+        }
+
+        // 加载设备数据
+        async function loadEquipment() {
+            const userid = localStorage.getItem("userid");
+            try {
+                const response = await axios.get(`http://localhost:8080/api/equipment/user-equipment?userId=${userid}`);
+                allEquipment = response.data;
+                filterEquipment();
+            } catch (error) {
+                console.error('加载设备失败:', error);
+            }
+        }
+
+        // 加载维护记录
+        async function loadRecords() {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/maintain-scrap?page=0&size=100`);
+                allRecords = response.data.content;
+                filterRecords();
+            } catch (error) {
+                console.error('加载记录失败:', error);
+            }
+        }
+
+        // 在 filterEquipment() 函数中修改过滤条件
+        function filterEquipment() {
+            const searchForm = currentTab === 'repair' ?
+                document.getElementById('repair-search-form') :
+                document.getElementById('scrap-search-form');
+
+            const nameFilter = currentTab === 'repair' ?
+                document.getElementById('repair-device-name').value.toLowerCase() :
+                document.getElementById('scrap-device-name').value.toLowerCase();
+
+            const typeFilter = currentTab === 'repair' ?
+                document.getElementById('repair-device-type').value :
+                document.getElementById('scrap-device-type').value;
+
+            const statusFilter = currentTab === 'repair' ?
+                document.getElementById('repair-status').value :
+                'AVAILABLE'; // 报废管理只显示可用设备
+
+            filteredEquipment = allEquipment.filter(equip => {
+                // 维修管理不显示已报废设备
+                // if (currentTab === 'repair' && equip.equipstatus === 'SCRAPPED') return false;
+                if (currentTab === 'repair' && (equip.equipstatus !== 'MAINTENANCE' && equip.equipstatus !== 'AVAILABLE')) return false;
+                // 报废管理不显示已报废设备
+                if (currentTab === 'scrap' && equip.equipstatus === 'SCRAPPED') return false;
+
+                // 根据搜索条件过滤
+                const nameMatch = equip.equipname.toLowerCase().includes(nameFilter);
+                const typeMatch = typeFilter === '' || equip.equipkind === typeFilter;
+                const statusMatch = statusFilter === '' || equip.equipstatus === statusFilter;
+
+                return nameMatch && typeMatch && statusMatch;
+            });
+        }
+
+        // 过滤记录数据
+        function filterRecords() {
+            const nameFilter = document.getElementById('record-device-name').value.toLowerCase();
+            const typeFilter = document.getElementById('record-type').value;
+            const dateFilter = document.getElementById('record-date').value;
+
+            filteredRecords = allRecords.filter(record => {
+                const equip = allEquipment.find(e => e.equipid === record.equipid) || {};
+                const nameMatch = equip.equipname ? equip.equipname.toLowerCase().includes(nameFilter) : true;
+                const typeMatch = typeFilter === '' || record.kind.toString() === typeFilter;
+                const dateMatch = !dateFilter || new Date(record.date).toISOString().split('T')[0] === dateFilter;
+
+                return nameMatch && typeMatch && dateMatch;
+            });
+        }
+
+        // 渲染设备表格
+        function renderEquipmentTable() {
+            const tableBody = document.getElementById(`${currentTab}-device-list`);
+            tableBody.innerHTML = '';
+
+            const startIdx = (currentPage[currentTab] - 1) * itemsPerPage;
+            const paginatedItems = filteredEquipment.slice(startIdx, startIdx + itemsPerPage);
+
+            paginatedItems.forEach(equip => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${equip.equipnum || 'N/A'}</td>
+                    <td>${equip.equipname || 'N/A'}</td>
+                    <td>${equip.equipkind || 'N/A'}</td>
+                    <td>${equip.equipdate ? new Date(equip.equipdate).toLocaleDateString() : 'N/A'}</td>
+                    <td><span class="status status-${getStatusClass(equip.equipstatus)}">${equip.equipstatus || 'N/A'}</span></td>
+                    <td>${renderActionButtons(equip)}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+
+            renderPagination(filteredEquipment.length, `${currentTab}-pagination`, currentTab);
+        }
+
+        // 渲染操作按钮
+        function renderActionButtons(equip) {
+            if (currentTab === 'repair') {
+                if (equip.equipstatus === 'AVAILABLE') {
+                    return `<button class="action-btn btn-warning" onclick="startMaintenance(${equip.equipid})">开始维修</button>`;
+                } else if (equip.equipstatus === 'MAINTENANCE') {
+                    return `
+                        <button class="action-btn btn-success" onclick="completeMaintenance(${equip.equipid})">完成维修</button>
+                    `;
+                }
+            } else if (currentTab === 'scrap' && equip.equipstatus === 'AVAILABLE') {
+                return `<button class="action-btn btn-danger" onclick="scrapEquipment(${equip.equipid})">报废处理</button>`;
+            }
+            return '';
+        }
+
+        // 渲染记录表格
+        function renderRecordsTable() {
+            const tableBody = document.getElementById('record-list');
+            tableBody.innerHTML = '';
+
+            const startIdx = (currentPage.records - 1) * itemsPerPage;
+
+            // 先过滤掉设备为"未知设备"的记录
+            const validRecords = filteredRecords.filter(record => {
+                const equip = allEquipment.find(e => e.equipid === record.equipid);
+                // 只有当设备存在且设备名称不是"未知设备"时才保留记录
+                return equip && equip.equipname && equip.equipname !== '未知设备';
+            });
+
+            const paginatedItems = validRecords.slice(startIdx, startIdx + itemsPerPage);
+
+            // 如果没有符合条件的记录，显示提示信息
+            if (validRecords.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="5" style="text-align: center;">没有找到符合条件的记录</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+
+            // 渲染有效记录
+            paginatedItems.forEach(record => {
+                const equip = allEquipment.find(e => e.equipid === record.equipid);
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+            <td>${record.id}</td>
+            <td>${equip.equipname}</td>
+            <td>${record.kind === 0 ? '维修' : '报废'}</td>
+            <td>${record.date ? new Date(record.date).toLocaleString() : 'N/A'}</td>
+            <td><span class="status status-${getStatusClass(equip.equipstatus)}">${equip.equipstatus || 'N/A'}</span></td>
+        `;
+
+                tableBody.appendChild(row);
+            });
+
+            // 更新分页（基于有效记录数量）
+            renderPagination(validRecords.length, 'record-pagination', 'records');
+        }
+
+        // 渲染分页
+        function renderPagination(totalItems, paginationId, tab) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const pagination = document.getElementById(paginationId);
+            pagination.innerHTML = '';
+
+            // 上一页按钮
+            pagination.innerHTML += `<a href="#" onclick="changePage(${currentPage[tab] - 1}, '${tab}')">&laquo;</a>`;
+
+            // 页码按钮
+            for (let i = 1; i <= totalPages; i++) {
+                const activeClass = i === currentPage[tab] ? 'active' : '';
+                pagination.innerHTML += `<a href="#" class="${activeClass}" onclick="changePage(${i}, '${tab}')">${i}</a>`;
+            }
+
+            // 下一页按钮
+            pagination.innerHTML += `<a href="#" onclick="changePage(${currentPage[tab] + 1}, '${tab}')">&raquo;</a>`;
+        }
+
+        // 切换页码
+        function changePage(page, tab) {
+            const totalItems = tab === 'records' ? filteredRecords.length : filteredEquipment.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            if (page < 1 || page > totalPages) return;
+
+            currentPage[tab] = page;
+            if (tab === 'records') {
+                renderRecordsTable();
+            } else {
+                renderEquipmentTable();
+            }
+        }
+
+        // 获取状态对应的CSS类
+        function getStatusClass(status) {
+            if (!status) return 'normal';
+
+            switch (status) {
+                case 'AVAILABLE': return 'normal';
+                case 'MAINTENANCE': return 'maintenance';
+                case 'SCRAPPED': return 'scrapped';
+                default: return 'normal';
+            }
+        }
+
+        // 开始维修
+        async function startMaintenance(equipId) {
+            try {
+                // 更新设备状态
+                await axios.put(`http://localhost:8080/api/equipment/${equipId}/status?status=MAINTENANCE`);
+
+                // 创建维修记录
+                await axios.post('http://localhost:8080/api/maintain-scrap', {
+                    equipid: equipId,
+                    kind: 0 // 0表示维修
+                });
+
+                await loadEquipment();
+                filterEquipment();
+                renderEquipmentTable();
+            } catch (error) {
+                console.error('开始维修失败:', error);
+                alert('开始维修失败，请重试');
+            }
+        }
+
+        // 完成维修
+        async function completeMaintenance(equipId) {
+            try {
+                await axios.put(`http://localhost:8080/api/equipment/${equipId}/status?status=AVAILABLE`);
+                await loadEquipment();
+                filterEquipment();
+                renderEquipmentTable();
+                closeModal('repairDetailModal');
+            } catch (error) {
+                console.error('完成维修失败:', error);
+                alert('完成维修失败，请重试');
+            }
+        }
+
+        // 报废设备
+        async function scrapEquipment(equipId) {
+            if (!confirm('确定要报废此设备吗？此操作不可撤销！')) return;
+
+            try {
+                // 更新设备状态
+                await axios.put(`http://localhost:8080/api/equipment/${equipId}/status?status=SCRAPPED`);
+
+                // 创建报废记录
+                await axios.post('http://localhost:8080/api/maintain-scrap', {
+                    equipid: equipId,
+                    kind: 1 // 1表示报废
+                });
+
+                await loadEquipment();
+                filterEquipment();
+                renderEquipmentTable();
+                await loadRecords();
+                filterRecords();
+                renderRecordsTable();
+            } catch (error) {
+                console.error('报废设备失败:', error);
+                alert('报废设备失败，请重试');
+            }
+        }
+
+        显示维修详情
+        async function showRepairDetail(equipId) {
+            try {
+                const equip = allEquipment.find(e => e.equipid === equipId);
+                if (!equip) return;
+
+                // 获取维修记录
+                const response = await axios.get(`http://localhost:8080/api/maintain-scrap/by-equipment/${equipId}`);
+                const records = response.data;
+                const repairRecord = records.find(r => r.kind === 0);
+
+                if (!repairRecord) return;
+
+                currentRepairId = repairRecord.id;
+
+                // 填充模态框内容
+                document.getElementById('modal-repair-id').textContent = repairRecord.id;
+                document.getElementById('modal-equip-name').textContent = equip.equipname || 'N/A';
+                document.getElementById('modal-equip-num').textContent = equip.equipnum || 'N/A';
+                document.getElementById('modal-fault-type').textContent = '待确认';
+                document.getElementById('modal-submit-date').textContent = repairRecord.date ?
+                    new Date(repairRecord.date).toLocaleString() : 'N/A';
+                document.getElementById('modal-fault-desc').textContent = '暂无详细描述';
+
+                openModal('repairDetailModal');
+            } catch (error) {
+                console.error('获取维修详情失败:', error);
+            }
+        }
+
+        // 保存维修记录
+        async function saveRepairRecord() {
+            // 这里可以添加保存维修记录的代码
+            alert('维修记录已保存');
+        }
+
+        // 打开模态框
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        // 关闭模态框
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 登出
+        function logout() {
+            localStorage.removeItem('userid');
+            window.location.href = '../login2.html';
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 标签页切换
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    currentTab = tab.getAttribute('data-tab');
+                    document.getElementById(currentTab).classList.add('active');
+
+                    currentPage[currentTab] = 1;
+                    filterEquipment();
+                    renderEquipmentTable();
+                });
+            });
+
+            // 搜索表单提交
+            document.getElementById('repair-search-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                currentPage.repair = 1;
+                filterEquipment();
+                renderEquipmentTable();
+            });
+
+            document.getElementById('scrap-search-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                currentPage.scrap = 1;
+                filterEquipment();
+                renderEquipmentTable();
+            });
+
+            document.getElementById('record-search-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                currentPage.records = 1;
+                filterRecords();
+                renderRecordsTable();
+            });
+
+            // 重置按钮
+            document.getElementById('repair-search-form').querySelector('button[type="reset"]').addEventListener('click', () => {
+                setTimeout(() => {
+                    currentPage.repair = 1;
+                    filterEquipment();
+                    renderEquipmentTable();
+                }, 0);
+            });
+
+            document.getElementById('scrap-search-form').querySelector('button[type="reset"]').addEventListener('click', () => {
+                setTimeout(() => {
+                    currentPage.scrap = 1;
+                    filterEquipment();
+                    renderEquipmentTable();
+                }, 0);
+            });
+
+            document.getElementById('record-search-form').querySelector('button[type="reset"]').addEventListener('click', () => {
+                setTimeout(() => {
+                    currentPage.records = 1;
+                    filterRecords();
+                    renderRecordsTable();
+                }, 0);
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -62,23 +62,43 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user) {
-        // 验证用户名是否已存在
-        if (userService.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("用户名已存在！");
-        }
-
-        // 验证输入的完整性
-        if (user.getUsername() == null || user.getUsername().isEmpty() ||
-                user.getPassword() == null || user.getPassword().isEmpty()) {
-            return ResponseEntity.badRequest().body("用户名或密码不能为空！");
-        }
-
-        // 保存用户
-        userService.save(user);
-        return ResponseEntity.ok("注册成功！");
+//    @PostMapping
+//    public ResponseEntity<String> createUser(@RequestBody User user) {
+//        // 验证用户名是否已存在
+//        if (userService.findByUsername(user.getUsername()).isPresent()) {
+//            return ResponseEntity.badRequest().body("用户名已存在！");
+//        }
+//
+//        // 验证输入的完整性
+//        if (user.getUsername() == null || user.getUsername().isEmpty() ||
+//                user.getPassword() == null || user.getPassword().isEmpty()) {
+//            return ResponseEntity.badRequest().body("用户名或密码不能为空！");
+//        }
+//
+//        // 保存用户
+//        userService.save(user);
+//        return ResponseEntity.ok("注册成功！");
+//    }
+@PostMapping
+public ResponseEntity<Map<String, Object>> createUser(@RequestBody User user) {
+    // 验证用户名是否已存在
+    if (userService.findByUsername(user.getUsername()).isPresent()) {
+        return ResponseEntity.badRequest().body(Map.of("message", "用户名已存在！"));
     }
+
+    // 验证输入的完整性
+    if (user.getUsername() == null || user.getUsername().isEmpty() ||
+            user.getPassword() == null || user.getPassword().isEmpty()) {
+        return ResponseEntity.badRequest().body(Map.of("message", "用户名或密码不能为空！"));
+    }
+
+    // 保存用户
+    User savedUser = userService.save(user);
+    return ResponseEntity.ok(Map.of(
+            "message", "注册成功！",
+            "userid", savedUser.getUserid()
+    ));
+}
 
     @GetMapping("/check-username")
     public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
@@ -115,5 +135,19 @@ public ResponseEntity<?> login(@RequestBody User loginUser) {
                 .body(Map.of("message", "用户不存在"));
     }
 }
+    // 在UserController中添加以下端点
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> request) {
+        int userId = Integer.parseInt(request.get("userId"));
+        String oldPassword = request.get("oldPassword");
+        String newPassword = request.get("newPassword");
+
+        User updatedUser = userService.changePassword(userId, oldPassword, newPassword);
+        if (updatedUser != null) {
+            return ResponseEntity.ok("密码修改成功");
+        } else {
+            return ResponseEntity.status(400).body("原密码错误或用户不存在");
+        }
+    }
 
 }

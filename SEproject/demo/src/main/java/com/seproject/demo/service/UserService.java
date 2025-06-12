@@ -43,5 +43,16 @@ public class UserService {
     public boolean existsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
-
+    // 在UserService中添加以下方法
+    public User changePassword(int userId, String oldPassword, String newPassword) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.getPassword().equals(oldPassword)) {
+                user.setPassword(newPassword);
+                return userRepository.save(user);
+            }
+        }
+        return null;
+    }
 }

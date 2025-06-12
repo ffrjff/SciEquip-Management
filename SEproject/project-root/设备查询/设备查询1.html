@@ -223,6 +223,11 @@
             color: #721c24;
         }
         
+        .status-pending {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
         .action-link {
             color: #3498db;
             text-decoration: none;
@@ -292,9 +297,9 @@
             <a href="../首页.html">科研设备管理系统</a>
         </div>
         <div class="user-info">
-            <span>欢迎，张教授</span>
-            <a href="#">个人中心</a>
-            <a href="#">退出登录</a>
+            <span id="username-display">欢迎，</span>
+            <a href="../个人中心/个人中心1.html">个人中心</a>
+            <a href="../login2.html">退出登录</a>
         </div>
     </header>
     
@@ -332,6 +337,7 @@
                         <option value="AVAILABLE">可用</option>
                         <option value="IN_USE">使用中</option>
                         <option value="MAINTENANCE">维护中</option>
+                        <option value="PENDING">待审核</option>
                     </select>
                 </div>
                 
@@ -369,41 +375,6 @@
         <p>© 2025 科研设备管理系统</p>
     </footer>
 
-    <style>
-        /* 分页样式 */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-        }
-        
-        .pagination a, .pagination .page-number {
-            color: #3498db;
-            text-decoration: none;
-            padding: 8px 12px;
-            margin: 0 4px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        
-        .pagination a:hover, .pagination .page-number:hover {
-            background-color: #e9ecef;
-        }
-        
-        .pagination .active {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-        
-        .pagination #pageNumbers {
-            display: flex;
-        }
-    </style>
-
     <script>
         // 分页相关变量
         let currentPage = 1;
@@ -411,7 +382,18 @@
         let totalItems = 0;
         let allEquipmentData = [];
         
+        // 全局变量
+        let currentUser = {
+            id: localStorage.getItem("userid"),
+            name: localStorage.getItem("username")
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
+            // 显示用户名
+            if (currentUser.name) {
+                document.getElementById('username-display').textContent = `欢迎，${currentUser.name}`;
+            }
+            
             // 获取DOM元素
             const searchForm = document.getElementById('searchForm');
             const resultsTable = document.getElementById('resultsTable');
@@ -433,7 +415,9 @@
             const equipmentStatusMap = {
                 'AVAILABLE': { text: '可用', class: 'status-available' },
                 'IN_USE': { text: '使用中', class: 'status-in_use' },
-                'MAINTENANCE': { text: '维护中', class: 'status-maintenance' }
+                'MAINTENANCE': { text: '维护中', class: 'status-maintenance' },
+                'PENDING': { text: '待审核', class: 'status-pending' },
+                'SCRAPPED': { text: '已报废', class: 'status-scrapped' }
             };
             
             // 初始化页面时加载数据
@@ -508,8 +492,9 @@
                         return response.json();
                     })
                     .then(data => {
-                        allEquipmentData = data;
-                        totalItems = data.length;
+                        // 过滤掉已报废的设备
+                        allEquipmentData = data.filter(equip => equip.equipstatus !== 'SCRAPPED');
+                        totalItems = allEquipmentData.length;
                         renderEquipmentTable();
                         renderPagination();
                     })
@@ -567,6 +552,14 @@
                     const statusInfo = equipmentStatusMap[equipment.equipstatus] || 
                                      { text: equipment.equipstatus, class: '' };
                     
+                    // 根据状态决定显示哪些操作
+                    let actionButtons = '<a href="#" class="action-link">详情</a>';
+                    
+                    // 只有 AVAILABLE 状态的设备显示借用按钮
+                    // if (equipment.equipstatus === 'AVAILABLE') {
+                    //     actionButtons += '<a href="#" class="action-link">借用</a>';
+                    // }
+                    
                     row.innerHTML = `
                         <td>${equipment.equipnum}</td>
                         <td>${equipment.equipname}</td>
@@ -574,10 +567,7 @@
                         <td>${equipment.equipmodel}</td>
                         <td>${formattedDate}</td>
                         <td><span class="status ${statusInfo.class}">${statusInfo.text}</span></td>
-                        <td>
-                            <a href="#" class="action-link">详情</a>
-                            ${equipment.equipstatus !== 'IN_USE' ? '<a href="#" class="action-link">借用</a>' : ''}
-                        </td>
+                        <td>${actionButtons}</td>
                     `;
                     tbody.appendChild(row);
                 });
@@ -627,7 +617,7 @@
                 
                 // 更新上一页/下一页按钮状态
                 document.getElementById('prevPage').classList.toggle('disabled', currentPage === 1);
-                document.getElementById('nextPage').classList.toggle('disabled', currentPage === totalPages);
+                document.getElementById('nextPage').classList.toggle('disabled', currentPage === totalPages || totalPages === 0);
             }
         });
     </script>

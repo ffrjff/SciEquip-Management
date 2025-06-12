@@ -32,4 +32,5 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer>, 
     List<Equipment> findByEquipnameContaining(String name);
     List<Equipment> findByEquipkind(String type);
     List<Equipment> findByEquipstatus(String status);
+
 }

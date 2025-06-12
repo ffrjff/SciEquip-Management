@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 科研设备管理系统</title>
+    <style>
+        /* 样式保持不变 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+        }
+
+        .register-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: left;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <h1>注册账号</h1>
+            <form class="register-form" id="registerForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" class="form-control" placeholder="请输入用户名" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" class="form-control" placeholder="请输入密码" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="请再次输入密码" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">注册</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 修改注册表单的提交逻辑
+        document.getElementById("registerForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+            if (password !== confirmPassword) {
+                alert("两次输入的密码不一致，请重新输入！");
+                return;
+            }
+
+            // 先检查用户名是否已存在
+            fetch(`http://localhost:8080/user/check-username?username=${encodeURIComponent(username)}`)
+                .then(response => response.json())
+                .then(exists => {
+                    if (exists) {
+                        alert("用户名已存在，请更换一个！");
+                    } else {
+                        // 用户名不存在，发送注册请求
+                        fetch("http://localhost:8080/user", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ username, password })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("注册失败");
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.userid) {
+                                    // 创建默认的用户信息
+                                    return fetch("http://localhost:8080/userinfo", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ userid: data.userid })
+                                    })
+                                        .then(infoResponse => {
+                                            if (!infoResponse.ok) {
+                                                throw new Error("创建用户信息失败");
+                                            }
+                                            return infoResponse.json();
+                                        })
+                                        .then(infoData => {
+                                            alert(data.message || "注册成功！");
+                                            window.location.href = "login2.html";
+                                        });
+                                } else {
+                                    throw new Error("获取用户ID失败");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("注册请求出错：", error);
+                                alert("注册失败: " + error.message);
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.error("用户名检查请求出错：", error);
+                    alert("无法验证用户名，请稍后重试。");
+                });
+        });
+    </script>
+</body>
+
+</html>

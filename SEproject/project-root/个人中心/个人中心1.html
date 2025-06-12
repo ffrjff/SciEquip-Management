@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 科研设备管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .user-info a:hover {
+            background-color: #34495e;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .page-header h1 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .page-header h1 i {
+            color: #3498db;
+        }
+
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .profile-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3498db;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<!-- 替换body部分 -->
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="../首页.html">科研设备管理系统</a>
+        </div>
+        <div class="user-info">
+            <span id="username-display">欢迎，</span>
+            <a href="个人中心1.html">个人中心</a>
+            <a href="../login2.html">退出登录</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-user-circle"></i> 个人中心</h1>
+            <div class="breadcrumb">
+                <a href="../首页.html">首页</a> > 个人中心
+            </div>
+        </div>
+
+        <!-- 个人资料标签页 -->
+        <div class="card">
+            <div class="profile-section">
+                <img src="/images/default-avatar.png" alt="用户头像" class="profile-avatar" id="userAvatar">
+                <div class="profile-info">
+                    <h2 class="profile-name" id="usernameDisplay">未设置</h2>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <div class="detail-label">用户ID</div>
+                            <div class="detail-value" id="userIdDisplay">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">员工编号</div>
+                            <div class="detail-value" id="employeeIdDisplay">未设置</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">邮箱</div>
+                            <div class="detail-value" id="emailDisplay">未设置</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">性别</div>
+                            <div class="detail-value" id="genderDisplay">未知</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">年龄</div>
+                            <div class="detail-value" id="ageDisplay">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">电话</div>
+                            <div class="detail-value" id="phoneDisplay">未设置</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2><i class="fas fa-edit"></i> 编辑资料</h2>
+            <form id="userInfoForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-employeeid">员工编号</label>
+                        <input type="text" id="edit-employeeid" class="form-control" placeholder="请输入员工编号">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-email">邮箱</label>
+                        <input type="email" id="edit-email" class="form-control" placeholder="请输入邮箱">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-gender">性别</label>
+                        <select id="edit-gender" class="form-control">
+                            <option value="0">男</option>
+                            <option value="1">女</option>
+                            <option value="2" selected>未知</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-age">年龄</label>
+                        <input type="number" id="edit-age" class="form-control" placeholder="请输入年龄">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-phone">联系电话</label>
+                        <input type="tel" id="edit-phone" class="form-control" placeholder="请输入联系电话">
+                    </div>
+                </div>
+
+                <div class="avatar-upload">
+                    <img src="/images/default-avatar.png" alt="头像预览" class="avatar-preview" id="avatarPreview">
+                    <div>
+                        <label for="avatarInput" class="btn btn-primary">更换头像</label>
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                        <div style="font-size: 0.8rem; color: #7f8c8d; margin-top: 0.5rem;">支持JPG/PNG格式，大小不超过2MB</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" id="changePasswordBtn">修改密码</button>
+                    <button type="reset" class="btn btn-secondary">取消</button>
+                    <button type="submit" class="btn btn-primary">保存更改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 修改密码模态框 -->
+    <div id="passwordModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; width: 400px;">
+            <h2>修改密码</h2>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="oldPassword">原密码</label>
+                    <input type="password" id="oldPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">新密码</label>
+                    <input type="password" id="newPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">确认新密码</label>
+                    <input type="password" id="confirmNewPassword" class="form-control" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelPasswordChange">取消</button>
+                    <button type="submit" class="btn btn-primary">确认修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 科研设备管理系统</p>
+    </footer>
+
+    <script>
+        // 获取用户ID
+        const userId = localStorage.getItem("userid");
+        const defaultAvatar = "/images/default-avatar.png";
+        let currentUser = {
+            id: localStorage.getItem("userid"),
+            name: localStorage.getItem("username")
+        };
+        if (currentUser.name) {
+            document.getElementById('username-display').textContent = `欢迎，${currentUser.name}`;
+        }
+        // 加载用户信息和用户基本信息
+        function loadUserData() {
+            if (!userId) {
+                alert("未登录，请先登录");
+                window.location.href = "login2.html";
+                return;
+            }
+
+            // 设置默认头像
+            document.getElementById("userAvatar").src = defaultAvatar;
+            document.getElementById("avatarPreview").src = defaultAvatar;
+
+            // 获取用户基本信息
+            fetch(`http://localhost:8080/user/${userId}`)
+                .then(response => response.json())
+                .then(user => {
+                    document.getElementById("usernameDisplay").textContent = user.username || "未设置";
+                    document.getElementById("userIdDisplay").textContent = user.userid;
+                });
+
+            // 获取用户详细信息
+            fetch(`http://localhost:8080/userinfo/${userId}`)
+                .then(response => response.json())
+                .then(userInfo => {
+                    if (userInfo) {
+                        // 填充表单
+                        document.getElementById("edit-employeeid").value = userInfo.employeeid || "";
+                        document.getElementById("edit-email").value = userInfo.email || "";
+                        document.getElementById("edit-gender").value = userInfo.gender || 2;
+                        document.getElementById("edit-age").value = userInfo.age || "";
+                        document.getElementById("edit-phone").value = userInfo.phone || "";
+
+                        // 更新显示
+                        document.getElementById("employeeIdDisplay").textContent = userInfo.employeeid || "未设置";
+                        document.getElementById("emailDisplay").textContent = userInfo.email || "未设置";
+                        document.getElementById("genderDisplay").textContent =
+                            userInfo.gender === 0 ? "男" : userInfo.gender === 1 ? "女" : "未知";
+                        document.getElementById("ageDisplay").textContent = userInfo.age || "-";
+                        document.getElementById("phoneDisplay").textContent = userInfo.phone || "未设置";
+
+                        // 设置头像（如果有）
+                        if (userInfo.avatar) {
+                            document.getElementById("userAvatar").src = userInfo.avatar;
+                            document.getElementById("avatarPreview").src = userInfo.avatar;
+                        }
+                    }
+                });
+        }
+
+        // 保存用户信息
+        document.getElementById("userInfoForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const userInfo = {
+                userid: parseInt(userId),
+                employeeid: document.getElementById("edit-employeeid").value,
+                email: document.getElementById("edit-email").value,
+                gender: parseInt(document.getElementById("edit-gender").value),
+                age: parseInt(document.getElementById("edit-age").value) || 0,
+                phone: document.getElementById("edit-phone").value
+            };
+
+            fetch("http://localhost:8080/userinfo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userInfo)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("信息保存成功");
+                    loadUserData(); // 重新加载数据
+                })
+                .catch(error => {
+                    console.error("保存失败:", error);
+                    alert("保存失败，请重试");
+                });
+        });
+
+        // 头像上传处理
+        document.getElementById('avatarInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                // 检查文件大小
+                if (file.size > 2 * 1024 * 1024) {
+                    alert("头像大小不能超过2MB");
+                    return;
+                }
+
+                // 预览头像
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById('avatarPreview').src = event.target.result;
+                    document.getElementById('userAvatar').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // 上传头像到服务器
+                const formData = new FormData();
+                formData.append("avatar", file);
+                formData.append("userid", userId);
+
+                fetch("http://localhost:8080/userinfo/avatar", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Avatar path from server:", data.avatarPath);
+                        if (data.avatarPath) {
+                            // 更新头像显示
+                            document.getElementById("userAvatar").src = data.avatarPath;
+                            document.getElementById("avatarPreview").src = data.avatarPath;
+                            alert("头像上传成功");
+                        } else {
+                            alert("头像上传失败: " + (data.message || "未知错误"));
+                            // 恢复默认头像
+                            document.getElementById("userAvatar").src = defaultAvatar;
+                            document.getElementById("avatarPreview").src = defaultAvatar;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("头像上传出错:", error);
+                        alert("头像上传失败，请重试");
+                        // 恢复默认头像
+                        document.getElementById("userAvatar").src = defaultAvatar;
+                        document.getElementById("avatarPreview").src = defaultAvatar;
+                    });
+            }
+        });
+
+        // 修改密码功能
+        document.getElementById("changePasswordBtn").addEventListener("click", function () {
+            document.getElementById("passwordModal").style.display = "flex";
+        });
+
+        document.getElementById("cancelPasswordChange").addEventListener("click", function () {
+            document.getElementById("passwordModal").style.display = "none";
+        });
+
+        document.getElementById("passwordForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const oldPassword = document.getElementById("oldPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+            const confirmNewPassword = document.getElementById("confirmNewPassword").value;
+
+            if (newPassword !== confirmNewPassword) {
+                alert("两次输入的新密码不一致");
+                return;
+            }
+
+            fetch("http://localhost:8080/user/change-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: parseInt(userId),
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error("密码修改失败");
+                    }
+                })
+                .then(message => {
+                    alert(message);
+                    document.getElementById("passwordModal").style.display = "none";
+                    document.getElementById("passwordForm").reset();
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        });
+
+        // 页面加载时获取用户数据
+        window.addEventListener("load", loadUserData);
+    </script>
+</body>
+
+</html>

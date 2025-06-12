@@ -28,4 +28,8 @@ public class MaintainScrapService {
     public Page<MaintainScrap> findAll(int page, int size) {
         return repository.findAll(PageRequest.of(page, size));
     }
+
+    public Page<MaintainScrap> findByUserCompany(String userId, int page, int size) {
+        return repository.findByCompany(userId, PageRequest.of(page, size));
+    }
 }

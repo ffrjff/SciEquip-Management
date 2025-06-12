@@ -24,6 +24,14 @@ public class MaintainScrapController {
         return maintainScrapService.findAll(page, size);
     }
 
+    @GetMapping("/user-records")
+    public Page<MaintainScrap> getUserRecords(
+            @RequestParam String userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return maintainScrapService.findByUserCompany(userId, page, size);
+    }
+
     @GetMapping("/by-equipment/{equipid}")
     public List<MaintainScrap> getRecordsByEquipment(@PathVariable int equipid) {
         return maintainScrapService.findByEquipid(equipid);

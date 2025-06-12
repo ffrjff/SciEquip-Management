@@ -1,22 +1,17 @@
 package com.seproject.demo.service;
 
-import com.seproject.demo.entity.BorrowReturn;
-import com.seproject.demo.entity.BorrowReturnStatus;
-import com.seproject.demo.entity.Equipment;
-import com.seproject.demo.entity.EquipmentStatus;
-import com.seproject.demo.entity.EquipmentUsageStat;
-import com.seproject.demo.entity.MaintainScrap;
-import com.seproject.demo.repository.BorrowReturnRepository;
+import com.seproject.demo.entity.*;
 import com.seproject.demo.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.seproject.demo.entity.MaintainScrap;
+import com.seproject.demo.repository.BorrowReturnRepository;
 
-import java.util.Map;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
-// import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Map;
 import java.util.HashMap;
 
 import java.util.List;
@@ -29,9 +24,9 @@ public class EquipmentService {
     private final MaintainScrapService maintainScrapService;
 
     @Autowired
-    public EquipmentService(EquipmentRepository equipmentRepository, 
+    public EquipmentService(EquipmentRepository equipmentRepository,
                             BorrowReturnRepository borrowReturnRepository,
-                             MaintainScrapService maintainScrapService) {
+                            MaintainScrapService maintainScrapService) {
         this.equipmentRepository = equipmentRepository;
         this.borrowReturnRepository = borrowReturnRepository;
         this.maintainScrapService = maintainScrapService;
@@ -116,6 +111,11 @@ public class EquipmentService {
         return equipmentRepository.save(equipment);
     }
 
+
+
+
+
+
     public List<EquipmentUsageStat> getUsageStatistics(LocalDate startDate, String deviceType) {
         List<Equipment> allEquipment = equipmentRepository.findAll();
         List<EquipmentUsageStat> stats = new ArrayList<>();
@@ -146,7 +146,7 @@ public class EquipmentService {
                 }
 
                 if (record.getEquipstatus() == BorrowReturnStatus.BORROWED ||
-                    record.getEquipstatus() == BorrowReturnStatus.RETURNED) {
+                        record.getEquipstatus() == BorrowReturnStatus.RETURNED) {
                     usageCount++;
                     if (record.getReturndate() != null) {
                         long durationMs = record.getReturndate().getTime() - record.getBorrowdate().getTime();
@@ -175,7 +175,4 @@ public class EquipmentService {
 
         return stats;
     }
-
-
 }
-
