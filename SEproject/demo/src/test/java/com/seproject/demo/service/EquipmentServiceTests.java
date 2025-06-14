@@ -28,6 +28,7 @@ import com.seproject.demo.entity.BorrowReturnStatus;
 import com.seproject.demo.entity.Equipment;
 import com.seproject.demo.entity.EquipmentStatus;
 import com.seproject.demo.entity.EquipmentUsageStat;
+import com.seproject.demo.entity.MaintainScrap;
 import com.seproject.demo.service.EquipmentService;
 
 import jakarta.transaction.Transactional;
@@ -37,13 +38,17 @@ import jakarta.transaction.Transactional;
 public class EquipmentServiceTests {
     @Autowired
     private  EquipmentService equipmentService;
+    @Autowired
+    private BorrowReturnService borrowReturnService;
+    @Autowired
+    private MaintainScrapService maintainScrapService;
     
 
     @Test
     void findAll() {
         // 测试查询所有设备
         List<Equipment> result = equipmentService.findAll();
-        Assertions.assertEquals(2, result.size(), "设备数量应该为2");
+        Assertions.assertEquals(3, result.size(), "设备数量应该为2");
     }
 
     @Test
@@ -69,7 +74,7 @@ public class EquipmentServiceTests {
         equipment.setEquipstatus(EquipmentStatus.AVAILABLE);
         Equipment savedEquipment = equipmentService.save(equipment);
         Assertions.assertNotNull(savedEquipment, "保存的设备不应该为null");
-        Assertions.assertEquals("test_machine1", equipmentService.findById(3).getEquipname(), "保存的设备名称应该为test_machine1");
+        Assertions.assertEquals("test_machine1", equipmentService.findById(savedEquipment.getEquipid()).getEquipname(), "保存的设备名称应该为test_machine1");
 
         // equipmentService.deleteById(3); // 清理测试数据
     }
@@ -120,9 +125,122 @@ public class EquipmentServiceTests {
         Equipment updatedEquipment = equipmentService.updateStatus(1, status);
         Assertions.assertEquals(status, updatedEquipment.getEquipstatus(), "设备状态应该被更新为" + status);
 
-        // 恢复原状态
-        // equipmentService.updateStatus(1, original_status);
     }
+
+    @Test
+    void updateEquipment() {
+        int equipId = 1;
+
+        // 先查设备，确认存在
+        Equipment original = equipmentService.findById(equipId);
+        Assertions.assertNotNull(original, "设备不应该为null");
+
+        // 1. 测试全部字段都为非null，全部更新
+        Equipment detailsAllNotNull = new Equipment();
+        detailsAllNotNull.setEquipname("新设备名");
+        detailsAllNotNull.setEquipkind("新设备类型");
+        detailsAllNotNull.setEquipmodel("新型号");
+        detailsAllNotNull.setEquipnum("123456");
+        detailsAllNotNull.setEquipdate(java.sql.Date.valueOf("2025-06-14"));
+
+        Equipment updatedAll = equipmentService.updateEquipment(equipId, detailsAllNotNull);
+        Assertions.assertEquals("新设备名", updatedAll.getEquipname());
+        Assertions.assertEquals("新设备类型", updatedAll.getEquipkind());
+        Assertions.assertEquals("新型号", updatedAll.getEquipmodel());
+        Assertions.assertEquals("123456", updatedAll.getEquipnum());
+        Assertions.assertEquals(java.sql.Date.valueOf("2025-06-14"), updatedAll.getEquipdate());
+
+        // 2. 测试部分字段为null，不更新对应字段，保持原值
+        Equipment detailsPartialNull = new Equipment();
+        detailsPartialNull.setEquipname(null);
+        detailsPartialNull.setEquipkind("部分更新类型");
+        detailsPartialNull.setEquipmodel(null);
+        detailsPartialNull.setEquipnum("部分更新编号");
+        detailsPartialNull.setEquipdate(null);
+
+        Equipment updatedPartial = equipmentService.updateEquipment(equipId, detailsPartialNull);
+        // equipname、equipmodel、equipdate 应该保持上一次更新的值
+        Assertions.assertEquals("新设备名", updatedPartial.getEquipname());
+        Assertions.assertEquals("部分更新类型", updatedPartial.getEquipkind());
+        Assertions.assertEquals("新型号", updatedPartial.getEquipmodel());
+        Assertions.assertEquals("部分更新编号", updatedPartial.getEquipnum());
+        Assertions.assertEquals(java.sql.Date.valueOf("2025-06-14"), updatedPartial.getEquipdate());
+
+        // 3. 测试设备不存在时，抛出异常
+        int nonExistId = 999999;
+        Equipment details = new Equipment();
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () -> {
+            equipmentService.updateEquipment(nonExistId, details);
+        });
+        Assertions.assertTrue(ex.getMessage().contains("设备不存在"));
+    }
+
+    // @Test
+    // void getUsageStatistics_integratedTest() {
+    //     LocalDate startDate = LocalDate.of(2025, 6, 1);
+
+    //     // 清理测试环境（如果需要）
+    //     // equipmentService.deleteAll();
+    //     // borrowReturnService.deleteAll();
+    //     // maintainScrapService.deleteAll();
+
+    //     // 1. 新建设备1，类型A
+    //     Equipment equip1 = new Equipment();
+    //     equip1.setEquipname("设备1");
+    //     equip1.setEquipkind("类型A");
+    //     equip1.setEquipstatus(EquipmentStatus.AVAILABLE);
+    //     equip1 = equipmentService.save(equip1);
+
+    //     // 2. 新建设备2，类型B
+    //     Equipment equip2 = new Equipment();
+    //     equip2.setEquipname("设备2");
+    //     equip2.setEquipkind("类型B");
+    //     equip2.setEquipstatus(EquipmentStatus.IN_USE);
+    //     equip2 = equipmentService.save(equip2);
+
+    //     // 3. 新建借用归还记录：符合条件的
+    //     BorrowReturn br1 = new BorrowReturn();
+    //     br1.setEquipid(equip1.getEquipid());
+    //     br1.setBorrowdate(java.sql.Date.valueOf("2025-06-05"));
+    //     br1.setReturndate(java.sql.Date.valueOf("2025-06-06"));
+    //     br1.setEquipstatus(BorrowReturnStatus.BORROWED);
+    //     borrowReturnService.save(br1);
+
+    //     // 4. 新建借用归还记录：借用日期早于startDate，不应计入
+    //     BorrowReturn br2 = new BorrowReturn();
+    //     br2.setEquipid(equip1.getEquipid());
+    //     br2.setBorrowdate(java.sql.Date.valueOf("2025-05-20"));
+    //     br2.setReturndate(java.sql.Date.valueOf("2025-06-01"));
+    //     br2.setEquipstatus(BorrowReturnStatus.RETURNED);
+    //     borrowReturnService.save(br2);
+
+    //     // 5. 新建维护报废记录
+    //     MaintainScrap ms1 = new MaintainScrap();
+    //     ms1.setEquipid(equip1.getEquipid());
+    //     maintainScrapService.save(ms1);
+
+    //     // 6. 调用接口，不传设备类型，应该包含所有设备
+    //     List<EquipmentUsageStat> statsAll = equipmentService.getUsageStatistics(startDate, null);
+    //     Assertions.assertTrue(statsAll.stream().anyMatch(s -> s.getName().equals("设备1")));
+    //     Assertions.assertTrue(statsAll.stream().anyMatch(s -> s.getName().equals("设备2")));
+
+    //     // 7. 调用接口，设备类型为 "类型A"，只返回设备1
+    //     List<EquipmentUsageStat> statsTypeA = equipmentService.getUsageStatistics(startDate, "类型A");
+    //     Assertions.assertEquals(1, statsTypeA.size());
+    //     Assertions.assertEquals("设备1", statsTypeA.get(0).getName());
+
+    //     // 8. 校验设备1的统计数据
+    //     EquipmentUsageStat stat1 = statsTypeA.get(0);
+    //     Assertions.assertEquals("类型A", stat1.getType());
+    //     Assertions.assertEquals(1, stat1.getUsageCount(), "应该只统计符合startDate后的记录");
+    //     Assertions.assertTrue(stat1.getTotalDurationHours() > 0);
+    //     Assertions.assertEquals(1, stat1.getFailureCount(), "维护报废次数应为1");
+
+    //     // 9. 调用接口，设备类型为不存在的类型，应为空
+    //     List<EquipmentUsageStat> statsNone = equipmentService.getUsageStatistics(startDate, "不存在类型");
+    //     Assertions.assertTrue(statsNone.isEmpty());
+    // }
+
 
     
 }

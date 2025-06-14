@@ -100,5 +100,9 @@ public class UserServiceTests {
         // 错误旧密码
         User failedUpdate = userService.changePassword(saved.getUserid(), "wrongold", "whatever");
         assertNull(failedUpdate, "错误旧密码应返回null");
+
+        // 测试不存在的用户
+        User result = userService.changePassword(999, "null", "null");
+        assertNull(result, "不存在的用户ID应返回null");
     }
 }

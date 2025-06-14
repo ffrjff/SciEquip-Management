@@ -102,15 +102,6 @@ public class EquipmentController {
         return ResponseEntity.ok(updatedEquipment);
     }
 
-
-
-
-
-
-
-
-
-
     @GetMapping("/usage-stats")
     public List<EquipmentUsageStat> getUsageStats(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
