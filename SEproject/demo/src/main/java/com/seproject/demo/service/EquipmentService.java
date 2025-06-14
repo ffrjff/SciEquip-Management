@@ -111,11 +111,6 @@ public class EquipmentService {
         return equipmentRepository.save(equipment);
     }
 
-
-
-
-
-
     public List<EquipmentUsageStat> getUsageStatistics(LocalDate startDate, String deviceType) {
         List<Equipment> allEquipment = equipmentRepository.findAll();
         List<EquipmentUsageStat> stats = new ArrayList<>();
